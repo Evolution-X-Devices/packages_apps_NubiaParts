@@ -1,0 +1,55 @@
+java_defaults {
+    name: "NubiaParts_defaults",
+    static_libs: [
+        "androidx.core_core",
+        "androidx.preference_preference",
+        "androidx.compose.material3_material3",
+    ],
+        optimize: {
+        enabled: false,
+    },
+    optional_uses_libs: [
+        "androidx.window.extensions",
+        "androidx.window.sidecar",
+    ],
+        privileged: true,
+        system_ext_specific: true,
+        certificate: "platform",
+        platform_apis: true,
+}
+
+android_app {
+    name: "NubiaFanControl",
+    srcs: [
+    "Utils/*.java",
+    "fancontrol/*.java",
+    ],
+    manifest: "fancontrol/AndroidManifest.xml",
+
+    resource_dirs: [
+        "fancontrol/res",
+    ],
+
+    defaults: [
+        "NubiaParts_defaults",
+        "SettingsLibDefaults",
+    ],
+}
+
+android_app {
+    name: "NubiaGameKeys",
+    srcs: [
+        "Utils/*.java",
+        "gamekeys/**/*.java",
+    ],
+    manifest: "gamekeys/AndroidManifest.xml",
+
+    resource_dirs: [
+        "gamekeys/res",
+    ],
+
+    defaults: [
+        "NubiaParts_defaults",
+        "SettingsLibDefaults",
+    ],
+}
