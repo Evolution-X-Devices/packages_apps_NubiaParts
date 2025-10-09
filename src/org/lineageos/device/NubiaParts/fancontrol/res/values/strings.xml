@@ -17,6 +17,9 @@
     <string name="charging_boost_title" translatable="true">Charging boost</string>
     <string name="charging_boost_summary" translatable="true">Boost fan to max speed when device is charging</string>
 
+    <string name="monitor_calls_title" translatable="true">Monitor call state</string>
+    <string name="monitor_calls_summary" translatable="true">Pause fan when a call is active</string>
+
     <string name="per_app_fan_speed_title" translatable="true">Per-app fan speed</string>
 
 </resources>

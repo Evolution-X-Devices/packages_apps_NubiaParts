@@ -24,6 +24,7 @@
 
     <uses-permission android:name="android.permission.WRITE_SETTINGS" />
     <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED"/>
+    <uses-permission android:name="android.permission.READ_PHONE_STATE" />
 
     <application
         android:name=".FanControl"
@@ -55,6 +56,13 @@
         <service
             android:name=".ForegroundAppService"
             android:exported="false" />
+
+        <receiver android:name=".CallDetector"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.intent.action.PHONE_STATE"/>
+            </intent-filter>
+        </receiver>
 
         <service
             android:name=".FanControlTileService"

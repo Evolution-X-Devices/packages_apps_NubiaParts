@@ -30,6 +30,13 @@
         android:defaultValue="false"
         android:dependency="fan_main_switch" />
 
+    <androidx.preference.SwitchPreferenceCompat
+        android:key="pause_on_call"
+        android:title="@string/monitor_calls_title"
+        android:summary="@string/monitor_calls_summary"
+        android:defaultValue="false"
+        android:dependency="fan_main_switch" />
+
     <Preference
         android:key="per_app_fan_speed"
         android:title="@string/per_app_fan_speed_title"

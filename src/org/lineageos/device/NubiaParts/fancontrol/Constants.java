@@ -23,6 +23,8 @@ public class Constants {
     public static final String FAN_LOCK_REASON_KEY = "fan_lock_reason";
     public static final String USER_FAN_SPEED_KEY = "user_fan_speed";
     public static final String SCREEN_STATE_FAN_KEY = "follow_screen_state";
+
+    public static final String MONITOR_CALL_KEY = "pause_on_call";
     public static final String FAN_AUTO_KEY = "use_thermal_monitor";
 
     public static final String FAN_CHARGING_BOOST_KEY = "charging_boost";
