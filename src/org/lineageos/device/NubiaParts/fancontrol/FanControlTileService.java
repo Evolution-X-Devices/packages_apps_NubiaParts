@@ -8,6 +8,7 @@ import android.service.quicksettings.Tile;
 import android.service.quicksettings.TileService;
 import android.util.Log;
 
+import org.lineageos.device.NubiaParts.Utils.ResourceUtils;
 import org.lineageos.device.NubiaParts.fancontrol.Constants;
 
 public class FanControlTileService extends TileService {
@@ -16,6 +17,12 @@ public class FanControlTileService extends TileService {
 
     private static final String TAG = FanControlTileService.class.getSimpleName();
 
+
+    @Override
+    public void onCreate() {
+        ResourceUtils.init(this);
+        Constants.init(this);
+    }
 
     @Override
     public void onStartListening() {

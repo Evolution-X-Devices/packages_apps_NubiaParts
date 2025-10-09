@@ -3,12 +3,18 @@ package org.lineageos.device.NubiaParts.fancontrol;
 
 import android.content.Context;
 
-public class Constants {
-    Context context;
+import org.lineageos.device.NubiaParts.Utils.ResourceUtils;
 
-    public Constants(Context context) {
-        this.context = context.getApplicationContext(); // ensures it's the app context
+
+
+public class Constants {
+
+    public static Context CONTEXT;
+
+    public static void init(Context context) {
+        CONTEXT = context;
     }
+
 
     public static final String FAN_PREF_NAME = "nubia_fan";
     public static final String APP_FAN_SPEED_MAP_KEY = "app_fan_speeds";
@@ -29,7 +35,6 @@ public class Constants {
     public static final int FAN_SPEED_MAX = 5;
     public static final int FAN_SPEED_MIN = 0;
 
-    public static String FAN_TOGGLE_NODE = "/sys/kernel/fan/fan_enable";
-    public static String FAN_SPEED_NODE = "/sys/kernel/fan/fan_speed_level";
-
+    public static String FAN_TOGGLE_NODE = ResourceUtils.getString("fan_toggle_node");
+    public static String FAN_SPEED_NODE = ResourceUtils.getString("fan_speed_node");
 }
