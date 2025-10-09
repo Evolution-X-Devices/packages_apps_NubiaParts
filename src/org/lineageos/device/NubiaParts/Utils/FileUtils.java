@@ -1,6 +1,5 @@
-package org.lineageos.device.NubiaParts.fancontrol;
+package org.lineageos.device.NubiaParts.Utils;
 
-import android.util.Log;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -9,7 +8,7 @@ import java.io.IOException;
 import java.io.BufferedReader;
 import java.io.FileReader;
 
-public class Utils {
+public class FileUtils {
 
     /**
      * Write a string value to the specified file.

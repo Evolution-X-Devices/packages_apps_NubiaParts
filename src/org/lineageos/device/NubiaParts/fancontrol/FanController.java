@@ -7,25 +7,19 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.util.Log;
 
-import org.lineageos.device.NubiaParts.fancontrol.Constants;
-import org.lineageos.device.NubiaParts.fancontrol.Utils;
-import org.lineageos.device.NubiaParts.fancontrol.LockManager;
-
-import java.io.IOException;
+import org.lineageos.device.NubiaParts.Utils.FileUtils;
 
 public class FanController {
-
-
 
     private static final String TAG = FanController.class.getSimpleName();
 
     public static boolean toggle(boolean mode) {
-        Utils.writeValue(Constants.FAN_TOGGLE_NODE, (mode) ? "1" : "0");
+        FileUtils.writeValue(Constants.FAN_TOGGLE_NODE, (mode) ? "1" : "0");
         return true;
     }
 
     public static String getSpeed() {
-        return Utils.readLine(Constants.FAN_SPEED_NODE);
+        return FileUtils.readLine(Constants.FAN_SPEED_NODE);
     }
 
     public static boolean setSpeed(Context context, int speed) {
@@ -33,7 +27,7 @@ public class FanController {
             Log.w(TAG, "Fan is locked by " + LockManager.getLockReason(context));
             return false;
         }
-        Utils.writeValue(Constants.FAN_SPEED_NODE, String.valueOf(speed));
+        FileUtils.writeValue(Constants.FAN_SPEED_NODE, String.valueOf(speed));
         return true;
     }
 
