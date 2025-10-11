@@ -53,3 +53,28 @@ android_app {
         "SettingsLibDefaults",
     ],
 }
+android_app {
+    name: "NubiaPowerUtils",
+    srcs: [
+        "Utils/*.java",
+        "power/*.java",
+    ],
+
+    resource_dirs: [
+        "power/res",
+    ],
+
+    manifest: "power/AndroidManifest.xml",
+    defaults: [
+        "NubiaParts_defaults",
+    ],
+}
+
+prebuilt_etc {
+    name: "privapp_whitelist_nubia_power_utils",
+    src: "power/privapp_whitelist_nubia_power_utils.xml",
+    sub_dir: "permissions",
+    filename_from_src: true,
+    system_ext_specific: true,
+}
+

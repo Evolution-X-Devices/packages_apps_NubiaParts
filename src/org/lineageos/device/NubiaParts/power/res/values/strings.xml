@@ -1,0 +1,15 @@
+<resources>
+
+    <string name="bypass_charging_status_node" translatable="false">/sys/class/qcom-battery/battery_charging_enabled</string>
+
+    <string name="bypass_charging_enabled_value" translatable="false">0</string>
+
+    <string name="bypass_charging_disabled_value" translatable="false">1</string>
+
+    <string name="tile_enabled">On</string>
+    <string name="tile_disabled">Off</string>
+    <string name="tile_unavailable">Unavailable</string>
+
+    <string name="notification_title">Bypass Charging</string>
+    <string name="notification_text">Battery is not being charged. Tap to disable</string>
+</resources>

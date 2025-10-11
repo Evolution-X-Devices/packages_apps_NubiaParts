@@ -1,0 +1,3 @@
+<privapp-permissions package="org.lineageos.device.NubiaParts.power">
+    <permission name="android.permission.POST_NOTIFICATIONS"/>
+</privapp-permissions>
