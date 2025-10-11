@@ -68,6 +68,8 @@ android_app {
     defaults: [
         "NubiaParts_defaults",
     ],
+    required: ["privapp_whitelist_nubia_power_utils"],
+}
 }
 
 prebuilt_etc {
