@@ -1,6 +1,0 @@
-<resources>
-        <style name="AppTheme.NoActionBar" parent="Theme.Material3.DynamicColors.DayNight.NoActionBar">
-            <!-- Optional: Disable window decorations (removes title + system bars) -->
-            <item name="android:windowNoTitle">true</item>
-        </style>
-</resources>

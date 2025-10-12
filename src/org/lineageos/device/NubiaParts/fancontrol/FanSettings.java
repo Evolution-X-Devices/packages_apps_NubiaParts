@@ -26,7 +26,6 @@ import java.util.Collections;
 public class FanSettings extends PreferenceFragmentCompat
         implements SharedPreferences.OnSharedPreferenceChangeListener {
 
-
     @Override
     public void onCreatePreferences(Bundle savedInstanceState, String rootKey) {
         PreferenceManager prefManager = getPreferenceManager();
@@ -41,7 +40,7 @@ public class FanSettings extends PreferenceFragmentCompat
         Preference mapAppPref = findPreference("per_app_fan_speed");
         if (mapAppPref != null) {
             mapAppPref.setOnPreferenceClickListener(preference -> {
-                showAppListDialog(requireContext()); // ← this shows the dialog in-place
+                showAppListDialog(requireContext());
                 return true;
             });
         }
@@ -49,7 +48,7 @@ public class FanSettings extends PreferenceFragmentCompat
         SeekBarPreference fanSpeedPref = findPreference(Constants.USER_FAN_SPEED_KEY);
         if (fanSpeedPref != null) {
             fanSpeedPref.setSeekBarIncrement(1);
-            fanSpeedPref.setUpdatesContinuously(true); // optional
+            fanSpeedPref.setUpdatesContinuously(true);
             fanSpeedPref.setShowSeekBarValue(true);
         }
     }
@@ -57,7 +56,6 @@ public class FanSettings extends PreferenceFragmentCompat
     @Override
     public void onResume() {
         super.onResume();
-        // Register the listener
         getPreferenceManager().getSharedPreferences()
                 .registerOnSharedPreferenceChangeListener(this);
     }
@@ -65,32 +63,10 @@ public class FanSettings extends PreferenceFragmentCompat
     @Override
     public void onPause() {
         super.onPause();
-        // Unregister to avoid memory leaks
         getPreferenceManager().getSharedPreferences()
                 .unregisterOnSharedPreferenceChangeListener(this);
     }
 
-    @Override
-    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
-        super.onViewCreated(view, savedInstanceState);
-        int statusBarHeight = getStatusBarHeight();
-
-        view.setPadding(
-                view.getPaddingLeft(),
-                statusBarHeight,
-                view.getPaddingRight(),
-                view.getPaddingBottom()
-        );
-    }
-
-    private int getStatusBarHeight() {
-        int statusBarHeight = 0;
-        int resourceId = getResources().getIdentifier("status_bar_height", "dimen", "android");
-        if (resourceId > 0) {
-            statusBarHeight = getResources().getDimensionPixelSize(resourceId);
-        }
-        return statusBarHeight;
-    }
 
     @Override
     public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
