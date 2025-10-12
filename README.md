@@ -10,7 +10,11 @@ To include the Fan Control tile, build `NubiaFanControl`.
 ```
 PRODUCT_PACKAGES += NubiaFanControl
 ```
-To include the tile for Game Keys/Shoulder buttons, build `NubiaGameKeys`.
+To include the tile for Game Keys/Shoulder buttons (REDMAGIC), build `NubiaGameKeys`.
 ```
 PRODUCT_PACKAGES += NubiaGameKeys
+```
+To include the tile for bypass charging, build `NubiaPowerUtils`.
+```
+PRODUCT_PACKAGES += NubiaPowerUtils
 ```
