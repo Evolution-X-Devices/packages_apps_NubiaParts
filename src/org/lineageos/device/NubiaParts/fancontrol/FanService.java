@@ -6,7 +6,9 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
+import android.os.Handler;
 import android.os.IBinder;
+import android.os.Looper;
 import android.util.Log;
 
 
@@ -61,8 +63,10 @@ public class FanService extends Service {
 
         willChargeBoost = prefs.getBoolean(Constants.FAN_CHARGING_BOOST_KEY, false);
         followScreenState = prefs.getBoolean(Constants.SCREEN_STATE_FAN_KEY, false);
+
         mScreenStateReceiver = new ScreenStateReceiver();
         mChargingMonitor = new ChargingMonitor();
+
         controlFgAppService(true);
         Log.d(TAG, "Started ForegroundAppService");
         LockManager.unlockFan(getApplicationContext());

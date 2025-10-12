@@ -26,6 +26,7 @@ public class FanControlTileService extends TileService {
 
     @Override
     public void onStartListening() {
+
          SharedPreferences prefs = getApplicationContext().getSharedPreferences(
             Constants.FAN_PREF_NAME, Context.MODE_PRIVATE);
         Tile tile = getQsTile();

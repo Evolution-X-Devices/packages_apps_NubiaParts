@@ -21,10 +21,10 @@ public class ChargingMonitor extends BroadcastReceiver {
         String action = intent.getAction();
 
         if (Intent.ACTION_POWER_CONNECTED.equals(action)) {
-            Log.d("ChargingStateReceiver", "Power connected");
+            Log.d(TAG, "Power connected");
             boostFan(true, context);
         } else if (Intent.ACTION_POWER_DISCONNECTED.equals(action)) {
-            Log.d("ChargingStateReceiver", "Power disconnected");
+            Log.d(TAG, "Power disconnected");
             boostFan(false, context);
         }
 

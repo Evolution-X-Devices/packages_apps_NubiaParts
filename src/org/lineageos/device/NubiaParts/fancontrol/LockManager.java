@@ -3,9 +3,6 @@ package org.lineageos.device.NubiaParts.fancontrol;
 import android.content.Context;
 import android.content.SharedPreferences;
 
-import org.lineageos.device.NubiaParts.fancontrol.Utils;
-import org.lineageos.device.NubiaParts.fancontrol.Constants;
-
 public class LockManager {
 
     public static void lockFan(Context context, int speed, String reason) {

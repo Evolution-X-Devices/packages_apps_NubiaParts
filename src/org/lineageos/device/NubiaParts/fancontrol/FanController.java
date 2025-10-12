@@ -1,9 +1,7 @@
 package org.lineageos.device.NubiaParts.fancontrol;
 
 
-import android.app.Activity;
 import android.content.Context;
-import android.content.Intent;
 import android.content.SharedPreferences;
 import android.util.Log;
 

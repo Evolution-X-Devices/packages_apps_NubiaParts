@@ -1,15 +1,9 @@
 package org.lineageos.device.NubiaParts.fancontrol;
 
-import static android.provider.Settings.System.getString;
-
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.preference.PreferenceManager;
-
-import org.lineageos.device.NubiaParts.fancontrol.Constants;
-import org.lineageos.device.NubiaParts.fancontrol.Utils;
 
 public class BootCompletedReceiver extends BroadcastReceiver {
 
