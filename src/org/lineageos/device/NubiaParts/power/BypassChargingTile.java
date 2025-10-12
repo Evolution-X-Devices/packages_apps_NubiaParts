@@ -25,7 +25,8 @@ public class BypassChargingTile extends TileService {
             getQsTile().setState(Tile.STATE_UNAVAILABLE);
         } else if (!ChargingController.isChargingBypassed()) {
             getQsTile().setState(Tile.STATE_INACTIVE);
-        }
+            getQsTile().setSubtitle(ResourceUtils.getString("tile_disabled"));
+        } else
         getQsTile().updateTile();
     }
 
