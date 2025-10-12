@@ -4,6 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     package="org.lineageos.device.NubiaParts.power"
     android:versionCode="1"
+    android:sharedUserId="android.uid.system"
     android:versionName="1.0" >
 
     <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
