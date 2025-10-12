@@ -19,7 +19,6 @@ allow nubia_parts {
   netstats_service
   sensorservice_service
   surfaceflinger_service
-  vendor_perf_service
   voiceinteraction_service
   vibrator_manager_service
 }:service_manager find;
@@ -38,3 +37,6 @@ allow nubia_parts sysfs_fan:{ file lnk_file } rw_file_perms;
 
 allow nubia_parts sysfs_gamekey:dir r_dir_perms;
 allow nubia_parts sysfs_gamekey:{ file lnk_file } rw_file_perms;
+
+allow nubia_parts vendor_sysfs_battery_supply:dir r_dir_perms;
+allow nubia_parts vendor_sysfs_battery_supply:{ file lnk_file } rw_file_perms;

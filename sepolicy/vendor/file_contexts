@@ -1,2 +1,1 @@
-# Fan
-/sys/class/leds/fan(/.*)?   u:object_r:sysfs_fan:s0
+
