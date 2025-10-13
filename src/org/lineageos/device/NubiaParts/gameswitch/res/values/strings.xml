@@ -1,0 +1,42 @@
+<resources>
+
+    <string name="app_name">NubiaGameSwitch</string>
+
+    <string name="settings_title">Sliding switch</string>
+    <string name="settings_summary">Configure sliding switch behavior</string>
+
+    <string name="main_toggle_title">Handle switch</string>
+
+    <string name="action_title">Action</string>
+    <string name="none_summary">None</string>
+
+    <string name="action_dialog_title">Pick an action</string>
+
+    <string name="app_launch_title">App to launch</string>
+
+    <string name="app_launch_dialog_title">Choose an application</string>
+
+    <string name="vibration_title">Vibrate on action</string>
+    <string name="vibration_summary">Vibrate when switch is moved</string>
+
+    <string name="slider_usage_title">Slider action</string>
+
+    <string name="slider_for_app_launch">Launch application</string>
+    <string name="slider_for_camera">Launch camera</string>
+    <string name="slider_for_flashlight">Toggle flashlight</string>
+    <string name="slider_for_ringer">Change ringer mode</string>
+    <string name="slider_for_screenshot">Take screenshot</string>
+    <string name="slider_for_rotation_lock">Toggle rotation lock</string>
+
+    <string name="ringer_behavior_title">Ringer behavior</string>
+
+    <string name="ringer_dialog_title">Show panel</string>
+    <string name="ringer_dialog_summary">Show volume panel when ringer mode changed</string>
+
+    <string name="ringer_toggle_silent">Toggle silent mode</string>
+    <string name="ringer_toggle_vibrate">Toggle vibrate mode</string>
+    <string name="ringer_cycle">Cycle all modes</string>
+
+    <string name="accessibility_service_description">Handle nubia sliding switch</string>
+
+</resources>

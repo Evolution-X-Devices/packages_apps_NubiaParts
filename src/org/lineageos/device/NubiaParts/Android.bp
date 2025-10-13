@@ -5,7 +5,7 @@ java_defaults {
         "androidx.preference_preference",
         "androidx.compose.material3_material3",
     ],
-        optimize: {
+    optimize: {
         enabled: false,
     },
     optional_uses_libs: [
@@ -53,6 +53,42 @@ android_app {
         "SettingsLibDefaults",
     ],
 }
+
+android_app {
+    name: "NubiaGameSwitch",
+    srcs: [
+        "Utils/*.java",
+        "gameswitch/*.java",
+        "gameswitch/actions/*.java",
+    ],
+    manifest: "gameswitch/AndroidManifest.xml",
+
+    resource_dirs: [
+        "gameswitch/res",
+    ],
+
+    defaults: [
+        "NubiaParts_defaults",
+        "SettingsLibDefaults",
+    ],
+    required: [
+        "NubiaPartsHelper",
+        "privapp_whitelist_gameswitch"
+    ],
+}
+
+android_app {
+    name: "NubiaPartsHelper",
+    srcs: [
+        "helper/*.java",
+    ],
+    manifest: "helper/AndroidManifest.xml",
+    defaults: [
+        "NubiaParts_defaults",
+    ],
+}
+
+
 android_app {
     name: "NubiaPowerUtils",
     srcs: [
@@ -70,6 +106,13 @@ android_app {
     ],
     required: ["privapp_whitelist_nubia_power_utils"],
 }
+
+prebuilt_etc {
+    name: "privapp_whitelist_gameswitch",
+    src: "gameswitch/privapp_whitelist_gameswitch.xml",
+    sub_dir: "permissions",
+    filename_from_src: true,
+    system_ext_specific: true,
 }
 
 prebuilt_etc {

@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:settings="http://schemas.android.com/apk/res/org.lineageos.device.NubiaParts.gameswitch">
+
+    <com.android.settingslib.widget.MainSwitchPreference
+        android:key="slider_enable"
+        android:title="@string/main_toggle_title"
+        android:defaultValue="false" />
+
+    <ListPreference
+        android:key="slider_usage"
+        android:dialogTitle="@string/slider_usage_title"
+        android:title="@string/slider_usage_title"
+        android:entries="@array/slider_usage_entries"
+        android:entryValues="@array/slider_usage_entry_values"
+        android:summary="%s" />
+
+    <ListPreference
+        android:key="ringer_behavior"
+        android:dialogTitle="@string/ringer_behavior_title"
+        android:title="@string/ringer_behavior_title"
+        android:entries="@array/ringer_behavior_entries"
+        android:entryValues="@array/ringer_behavior_entry_values"
+        android:summary="%s" />
+
+    <SwitchPreference
+        android:key="show_volume_dialog_for_ringer"
+        android:title="@string/ringer_dialog_title"
+        android:summary="@string/ringer_dialog_summary" />
+
+    <Preference
+        android:key="launch_package_name"
+        android:title="@string/app_launch_title" />
+
+    <SwitchPreference
+        android:key="vibrate_on_action"
+        android:title="@string/vibration_title"
+        android:summary="@string/vibration_summary" />
+
+</PreferenceScreen>
