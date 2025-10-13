@@ -55,13 +55,6 @@
             android:name=".ForegroundAppService"
             android:exported="false" />
 
-        <receiver android:name=".CallDetector"
-            android:exported="true">
-            <intent-filter>
-                <action android:name="android.intent.action.PHONE_STATE"/>
-            </intent-filter>
-        </receiver>
-
         <service
             android:name=".FanControlTileService"
             android:icon="@drawable/ic_tile_icon"
@@ -79,12 +72,12 @@
             android:resource="@drawable/ic_tile_icon" />
         </service>
 
-<receiver android:name=".BootCompletedReceiver"
-    android:enabled="true"
-    android:exported="true">
-    <intent-filter>
-        <action android:name="android.intent.action.BOOT_COMPLETED"/>
-    </intent-filter>
-</receiver>
+        <receiver android:name=".BootCompletedReceiver"
+            android:enabled="true"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.intent.action.BOOT_COMPLETED"/>
+            </intent-filter>
+        </receiver>
     </application>
 </manifest>

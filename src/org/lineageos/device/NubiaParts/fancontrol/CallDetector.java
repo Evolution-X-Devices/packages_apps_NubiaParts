@@ -23,13 +23,11 @@ public class CallDetector extends BroadcastReceiver {
         if (stopOnCall && TelephonyManager.ACTION_PHONE_STATE_CHANGED.equals(intent.getAction())) {
             String state = intent.getStringExtra(TelephonyManager.EXTRA_STATE);
 
-            if (TelephonyManager.EXTRA_STATE_RINGING.equals(state)) {
-                Log.d(TAG, "Incoming call");
-            } else if (TelephonyManager.EXTRA_STATE_OFFHOOK.equals(state)) {
-                Log.d(TAG, "Call answered or outgoing");
+            if (TelephonyManager.EXTRA_STATE_OFFHOOK.equals(state)) {
+                Log.d(TAG, "Call answered or outgoing -> Pause fan");
                 FanController.toggle(false);
             } else if (TelephonyManager.EXTRA_STATE_IDLE.equals(state)) {
-                Log.d(TAG, "Call ended / idle");
+                Log.d(TAG, "Call ended / idle -> Resume fan");
                 FanController.toggle(true);
             }
         }

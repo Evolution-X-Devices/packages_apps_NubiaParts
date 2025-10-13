@@ -9,6 +9,8 @@ import android.content.SharedPreferences;
 import android.os.Handler;
 import android.os.IBinder;
 import android.os.Looper;
+import android.provider.Telephony;
+import android.telephony.TelephonyManager;
 import android.util.Log;
 
 
@@ -17,9 +19,12 @@ public class FanService extends Service {
     boolean userWantsFanEnabled;
     boolean followScreenState;
     boolean willChargeBoost;
+    boolean pauseOnCall;
 
     private ScreenStateReceiver mScreenStateReceiver;
     private ChargingMonitor mChargingMonitor;
+
+    private CallDetector mCallDetector;
 
     Context context = this;
 
@@ -63,9 +68,11 @@ public class FanService extends Service {
 
         willChargeBoost = prefs.getBoolean(Constants.FAN_CHARGING_BOOST_KEY, false);
         followScreenState = prefs.getBoolean(Constants.SCREEN_STATE_FAN_KEY, false);
+        pauseOnCall = prefs.getBoolean(Constants.MONITOR_CALL_KEY, false);
 
         mScreenStateReceiver = new ScreenStateReceiver();
         mChargingMonitor = new ChargingMonitor();
+        mCallDetector = new CallDetector();
 
         controlFgAppService(true);
         Log.d(TAG, "Started ForegroundAppService");
@@ -79,6 +86,15 @@ public class FanService extends Service {
             Log.d(TAG, "Started ChargingMonitor");
         } else {
            deregisterReceiver(mChargingMonitor);
+        }
+
+        if (pauseOnCall) {
+            IntentFilter callFilter = new IntentFilter();
+            callFilter.addAction(TelephonyManager.ACTION_PHONE_STATE_CHANGED);
+            registerReceiver(mCallDetector, callFilter);
+            Log.d(TAG, "Started CallDetector");
+        } else {
+            deregisterReceiver(mCallDetector);
         }
 
         if (followScreenState) {
@@ -129,5 +145,7 @@ public class FanService extends Service {
         deregisterReceiver(mScreenStateReceiver);
         Log.d(TAG, "Attempting to unregister ChargingMonitor...");
         deregisterReceiver(mChargingMonitor);
+        Log.d(TAG, "Attempting to unregister CallDetector");
+        deregisterReceiver(mCallDetector);
     }
 }
