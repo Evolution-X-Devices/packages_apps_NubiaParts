@@ -34,8 +34,6 @@ public class ChargingController extends BroadcastReceiver {
 
     @Override
     public void onReceive(Context context, Intent intent) {
-        TileService.requestListeningState(context,
-                new ComponentName(context, BypassChargingTile.class));
         if (Objects.equals(intent.getAction(), Constants.Intent.NOTIFICATION_TAPPED)) {
             if (isChargingBypassed()) {
                 setBypass(false);
