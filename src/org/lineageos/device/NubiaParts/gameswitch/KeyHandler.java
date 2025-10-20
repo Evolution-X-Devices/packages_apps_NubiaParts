@@ -4,13 +4,12 @@ import android.accessibilityservice.AccessibilityService;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.Context;
-import android.os.IBinder;
 import android.os.VibrationEffect;
 import android.os.Vibrator;
 import android.os.VibratorManager;
 import android.provider.Settings;
+import android.text.TextUtils;
 import android.util.Log;
-import android.view.InputEvent;
 import android.view.KeyEvent;
 import android.view.accessibility.AccessibilityEvent;
 
@@ -48,15 +47,32 @@ public class KeyHandler extends AccessibilityService {
 
     }
 
-    private boolean isAccessibilityServiceEnabled(Context context, Class<?> service) {
-        String prefString = Settings.Secure.getString(
-                context.getContentResolver(),
-                Settings.Secure.ENABLED_ACCESSIBILITY_SERVICES
-        );
-        if (prefString == null) return false;
-        String serviceId = context.getPackageName() + "/" + service.getName();
-        return prefString.contains(serviceId);
+    public static boolean isAccessibilityServiceEnabled(Context context) {
+        String serviceId = context.getPackageName() + KeyHandler.class.getSimpleName();
+        int enabled = 0;
+        try {
+            enabled = Settings.Secure.getInt(
+                    context.getContentResolver(),
+                    Settings.Secure.ACCESSIBILITY_ENABLED);
+        } catch (Settings.SettingNotFoundException ignored) {}
+
+        if (enabled == 1) {
+            String settingValue = Settings.Secure.getString(
+                    context.getContentResolver(),
+                    Settings.Secure.ENABLED_ACCESSIBILITY_SERVICES);
+            if (settingValue != null) {
+                TextUtils.SimpleStringSplitter colonSplitter = new TextUtils.SimpleStringSplitter(':');
+                colonSplitter.setString(settingValue);
+                for (String service : colonSplitter) {
+                    if (service.equalsIgnoreCase(serviceId)) {
+                        return true;
+                    }
+                }
+            }
+        }
+        return false;
     }
+
 
     private boolean isAccessibilityEnabled(Context context) {
         try {
@@ -78,7 +94,7 @@ public class KeyHandler extends AccessibilityService {
     @Override
     public void onInterrupt() {
         boolean handlerPref = mPrefs.getBoolean(Constants.SLIDER_ENABLE_KEY, false);
-        if (handlerPref && !isAccessibilityServiceEnabled(mContext, this.getClass())
+        if (handlerPref && !isAccessibilityServiceEnabled(mContext)
             && isAccessibilityEnabled(mContext) ) {
             Log.d(TAG, "User disabled accessibility service");
             mPrefs.edit().putBoolean(Constants.SLIDER_ENABLE_KEY, false).apply();

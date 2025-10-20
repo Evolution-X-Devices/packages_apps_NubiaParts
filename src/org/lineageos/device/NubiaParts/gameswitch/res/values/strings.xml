@@ -39,4 +39,7 @@
 
     <string name="accessibility_service_description">Handle nubia sliding switch</string>
 
+    <string name="accessibility_service_dialog_title">Accessibility Service Required</string>
+    <string name="accessibility_service_dialog_summary">To handle the switch, you must enable the accessibility service.</string>
+
 </resources>

@@ -9,6 +9,7 @@ import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.os.UserHandle;
+import android.provider.Settings;
 import android.util.Log;
 import android.util.Pair;
 import androidx.preference.ListPreference;
@@ -18,12 +19,13 @@ import androidx.preference.PreferenceFragmentCompat;
 import androidx.preference.PreferenceManager;
 import androidx.preference.PreferenceScreen;
 import androidx.preference.Preference;
+import com.android.settingslib.widget.MainSwitchPreference;
 import androidx.preference.SwitchPreference;
-
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 
+import org.lineageos.device.NubiaParts.Utils.ResourceUtils;
 import org.lineageos.device.NubiaParts.gameswitch.R;
 import org.lineageos.device.NubiaParts.gameswitch.actions.*;
 
@@ -35,6 +37,7 @@ public class GameSwitchSettings extends PreferenceFragmentCompat
 
     @Override
     public void onCreatePreferences(Bundle savedInstanceState, String rootKey) {
+        ResourceUtils.init(requireContext());
 
         Context user0Ctx = requireContext().createContextAsUser(UserHandle.of(0), 0);
 
@@ -46,13 +49,13 @@ public class GameSwitchSettings extends PreferenceFragmentCompat
         addPreferencesFromResource(R.xml.prefs);
 
         Preference appLaunchPref = findPreference(Constants.KEY_LAUNCH_APP_NAME);
+
         if (appLaunchPref != null) {
             appLaunchPref.setOnPreferenceClickListener(preference -> {
                 showAppListDialog(requireContext());
                 return true;
             });
         }
-
     }
 
     @Override
@@ -60,8 +63,10 @@ public class GameSwitchSettings extends PreferenceFragmentCompat
 
         if (key.equals(Constants.SLIDER_ENABLE_KEY)) {
             boolean value = sharedPreferences.getBoolean(key, false);
-            if (!value) {
-                sendServiceIntent(requireContext(), 2);
+            if (value) {
+                ensureAccessibilityService(requireContext());
+            } else {
+                    sendServiceIntent(requireContext(), 2);
             }
         } else {
             sendServiceIntent(requireContext(), 1);
@@ -69,6 +74,20 @@ public class GameSwitchSettings extends PreferenceFragmentCompat
         processLayout(sharedPreferences);
     }
 
+    private void ensureAccessibilityService(Context context) {
+        if (!KeyHandler.isAccessibilityServiceEnabled(context)) {
+            new AlertDialog.Builder(context)
+                    .setTitle(ResourceUtils.getString("accessibility_service_dialog_title"))
+                    .setMessage(ResourceUtils.getString("accessibility_service_dialog_summary"))
+                    .setPositiveButton(android.R.string.ok, (dialog, which) -> {
+                        Intent intent = new Intent(Settings.ACTION_ACCESSIBILITY_SETTINGS);
+                        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                        context.startActivity(intent);
+                    })
+                    .setNegativeButton(android.R.string.cancel, null)
+                    .show();
+        }
+    }
 
     @Override
     public void onResume() {
