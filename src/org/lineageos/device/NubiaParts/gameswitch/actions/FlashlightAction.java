@@ -43,7 +43,7 @@ public class FlashlightAction extends SwitchControllerBase {
         torchIntent.putExtra("mode", torchState);
         Log.d(TAG, "Calling helper for torch!");
         mContext.sendBroadcast(torchIntent);
-        mTorchEnabled = true;
+        mTorchEnabled = !mTorchEnabled;
     }
 
     private void toggleTorch() {

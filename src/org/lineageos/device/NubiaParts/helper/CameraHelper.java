@@ -77,7 +77,20 @@ public class CameraHelper extends BroadcastReceiver {
         }
 
         try {
-            mCameraManager.setTorchMode(mCameraId, mode);
+            CameraCharacteristics characteristics =
+                    mCameraManager.getCameraCharacteristics(mCameraId);
+            if (mode) {
+                int maxLevel = 0;
+                maxLevel = characteristics.get(
+                        CameraCharacteristics.FLASH_INFO_STRENGTH_MAXIMUM_LEVEL);
+                if (maxLevel != 0) {
+                    mCameraManager.turnOnTorchWithStrengthLevel(mCameraId, maxLevel);
+                } else {
+                    mCameraManager.setTorchMode(mCameraId, true);
+                }
+            } else {
+                mCameraManager.setTorchMode(mCameraId, false);
+            }
         } catch (CameraAccessException e){
             Log.e(TAG, "Failed to turn flashlight " + (mode ? "on" : "off"), e);
         }
