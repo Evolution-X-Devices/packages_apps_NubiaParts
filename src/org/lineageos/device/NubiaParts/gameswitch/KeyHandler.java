@@ -48,15 +48,7 @@ public class KeyHandler extends AccessibilityService {
     }
 
     public static boolean isAccessibilityServiceEnabled(Context context) {
-        String serviceId = context.getPackageName() + KeyHandler.class.getSimpleName();
-        int enabled = 0;
-        try {
-            enabled = Settings.Secure.getInt(
-                    context.getContentResolver(),
-                    Settings.Secure.ACCESSIBILITY_ENABLED);
-        } catch (Settings.SettingNotFoundException ignored) {}
-
-        if (enabled == 1) {
+        String serviceId = context.getPackageName() + "/" + KeyHandler.class.getName();
             String settingValue = Settings.Secure.getString(
                     context.getContentResolver(),
                     Settings.Secure.ENABLED_ACCESSIBILITY_SERVICES);
@@ -69,22 +61,9 @@ public class KeyHandler extends AccessibilityService {
                     }
                 }
             }
-        }
         return false;
     }
 
-
-    private boolean isAccessibilityEnabled(Context context) {
-        try {
-            int enabled = Settings.Secure.getInt(
-                    context.getContentResolver(),
-                    Settings.Secure.ACCESSIBILITY_ENABLED
-            );
-            return enabled == 1;
-        } catch (Settings.SettingNotFoundException e) {
-            return false;
-        }
-    }
 
     @Override
     public void onAccessibilityEvent(AccessibilityEvent event) {
@@ -94,8 +73,7 @@ public class KeyHandler extends AccessibilityService {
     @Override
     public void onInterrupt() {
         boolean handlerPref = mPrefs.getBoolean(Constants.SLIDER_ENABLE_KEY, false);
-        if (handlerPref && !isAccessibilityServiceEnabled(mContext)
-            && isAccessibilityEnabled(mContext) ) {
+        if (handlerPref && !isAccessibilityServiceEnabled(mContext)) {
             Log.d(TAG, "User disabled accessibility service");
             mPrefs.edit().putBoolean(Constants.SLIDER_ENABLE_KEY, false).apply();
         }
