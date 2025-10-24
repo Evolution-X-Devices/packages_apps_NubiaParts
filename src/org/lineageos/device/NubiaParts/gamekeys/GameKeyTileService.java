@@ -8,6 +8,10 @@ import android.service.quicksettings.TileService;
 import android.content.Intent;
 import android.util.Log;
 
+import org.lineageos.device.NubiaParts.Utils.FileUtils;
+import static org.lineageos.device.NubiaParts.Utils.ResourceUtils.*;
+
+import org.lineageos.device.NubiaParts.Utils.ResourceUtils;
 import org.lineageos.device.NubiaParts.gamekeys.Constants;
 import org.lineageos.device.NubiaParts.gamekeys.KeyController;
 import org.lineageos.device.NubiaParts.gamekeys.ScreenStateReceiver;
@@ -16,6 +20,8 @@ public class GameKeyTileService extends TileService {
 
     private final Context context = this;
     private static boolean isRegistered = false;
+
+    SharedPreferences prefs;
 
     
     private static final String TAG = GameKeyTileService.class.getSimpleName();
@@ -48,45 +54,77 @@ public class GameKeyTileService extends TileService {
 
     @Override
     public void onStartListening() {
-         SharedPreferences prefs = getApplicationContext().getSharedPreferences(
-            Constants.PREF_KEY, Context.MODE_PRIVATE);
+        prefs = getApplicationContext().getSharedPreferences(
+            Constants.Prefs.PREF_KEY, Context.MODE_PRIVATE);
+        ResourceUtils.init(getApplicationContext());
         Tile tile = getQsTile();
         tile.setLabel("Shoulder Buttons");
-        if (Utils.readLine(Constants.LEFT_SHOULDER) != null 
-        && Utils.readLine(Constants.RIGHT_SHOULDER) != null) {
-            if (prefs.getBoolean(Constants.USER_ENABLE_GAME_KEY_PREF, false)) {
-                tile.setState(Tile.STATE_ACTIVE);
-                tile.setSubtitle("On");  
-            } else {
-                tile.setState(Tile.STATE_INACTIVE);
-                tile.setSubtitle("Off");  
-            }
-        } else {
+        if (FileUtils.readLine(Constants.LEFT_SHOULDER_MODE).isEmpty()
+        || FileUtils.readLine(Constants.RIGHT_SHOULDER_MODE).isEmpty()) {
             tile.setState(Tile.STATE_UNAVAILABLE);
         }
+
+        boolean leftState = KeyController.getKeyMode(0);
+        boolean rightState = KeyController.getKeyMode(1);
+
+        if (leftState && rightState) {
+            tile.setState(Tile.STATE_ACTIVE);
+            tile.setSubtitle(ResourceUtils.getString("tile_state_enabled_subtitle") + " (L+R)");
+        } else if (leftState) {
+            tile.setState(Tile.STATE_ACTIVE);
+            tile.setSubtitle(ResourceUtils.getString("tile_state_enabled_subtitle") + " (L)");
+        } else if (rightState) {
+            tile.setState(Tile.STATE_ACTIVE);
+            tile.setSubtitle(ResourceUtils.getString("tile_state_enabled_subtitle") + " (R)");
+        } else {
+            tile.setState(Tile.STATE_INACTIVE);
+            tile.setSubtitle(ResourceUtils.getString("tile_state_disabled_subtitle"));
+        }
+
         tile.updateTile();
     }
 
     @Override
     public void onClick() {
-            SharedPreferences prefs = getApplicationContext().getSharedPreferences(
-            Constants.PREF_KEY, Context.MODE_PRIVATE);
-            Tile tile = getQsTile();
-            if (tile.getState() == Tile.STATE_ACTIVE) {
-                prefs.edit().putBoolean(Constants.USER_ENABLE_GAME_KEY_PREF, false).apply();
-                KeyController.sleep();
-                unregisterScreenReceiver(this);        
-                tile.setSubtitle("Off");  
-                tile.setState(Tile.STATE_INACTIVE);
-            } else {
-                prefs.edit().putBoolean(Constants.USER_ENABLE_GAME_KEY_PREF, true).apply();
-                KeyController.wake();
-                registerScreenReceiver(this);
-                tile.setSubtitle("On");  
-                tile.setState(Tile.STATE_ACTIVE);
-            }
+            cycleState();
+    }
+
+    private void cycleState() {
+        boolean leftState = KeyController.getKeyMode(0);
+        boolean rightState = KeyController.getKeyMode(1);
+        boolean newLeftState = leftState;
+        boolean newRightState = rightState;
+        Tile tile = getQsTile();
+
+        if (!leftState && !rightState) {
+            newLeftState = true;
+            newRightState = true; // L + R
+            tile.setSubtitle(ResourceUtils.getString("tile_state_enabled_subtitle") + " (L+R)");
+        } else if (leftState && rightState) {
+            newRightState = false; // L only
+            tile.setSubtitle(ResourceUtils.getString("tile_state_enabled_subtitle") + " (L)");
+        } else if (leftState) {
+            newLeftState = false;
+            newRightState = true; // R only
+            tile.setSubtitle(ResourceUtils.getString("tile_state_enabled_subtitle") + " (R)");
+        } else {
+            newRightState = false; // OFF
+            tile.setState(Tile.STATE_INACTIVE);
+            tile.setSubtitle(ResourceUtils.getString("tile_state_disabled_subtitle"));
+            unregisterScreenReceiver(this);
+        }
+
+        if (newRightState || newLeftState) {
+            tile.setState(Tile.STATE_ACTIVE);
+            registerScreenReceiver(this);
+        }
+
+        KeyController.setKeyMode(newLeftState, newRightState);
+        prefs.edit().putBoolean(Constants.Prefs.KEY_LEFT_MODE, newLeftState)
+                .putBoolean(Constants.Prefs.KEY_RIGHT_MODE, newRightState).apply();
             tile.updateTile();
     }
+
 
 }
 

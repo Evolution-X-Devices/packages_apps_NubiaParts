@@ -2,6 +2,16 @@
 
 <resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
     
-<string name="app_title">NubiaGameKeys</string>
+    <string name="app_title">NubiaGameKeys</string>
+    <string name="settings_name">Shoulder Buttons</string>
+
+    <string name="tile_state_disabled_subtitle">Off</string>
+    <string name="tile_state_enabled_subtitle">On</string>
+
+    <string name="game_keys_main_switch_title">Enabled</string>
+
+    <string name="game_keys_left_title">Left</string>
+    <string name="game_keys_right_title">Right</string>
+    <string name="game_keys_sensitivity_category_title">Sensitivity</string>
 
 </resources>

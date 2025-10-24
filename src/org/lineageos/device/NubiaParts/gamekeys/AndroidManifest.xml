@@ -7,32 +7,46 @@
 
     <uses-permission android:name="android.permission.VIBRATE" />
 
-<application
-        android:label="@string/app_title"
-        android:defaultToDeviceProtectedStorage="true"
-        android:directBootAware="true"
-        android:exported="false">
-<service
-    android:name=".GameKeyTileService"
-    android:icon="@drawable/ic_tile_icon"
-    android:label="Shoulder Buttons"
-    android:exported="true"
-    android:permission="android.permission.BIND_QUICK_SETTINGS_TILE">
-    <intent-filter>
-        <action android:name="android.service.quicksettings.action.QS_TILE" />
-    </intent-filter>
+    <application
+            android:label="@string/app_title"
+            android:defaultToDeviceProtectedStorage="true"
+            android:directBootAware="true"
+            android:exported="false">
 
-    <meta-data
-        android:name="android.service.quicksettings.TILE_ICON"
-        android:resource="@drawable/ic_tile_icon" />
-    <meta-data
-        android:name="android.service.quicksettings.TILE_LABEL"
-        android:value="Game Keys" />
-</service>
+        <activity
+            android:name=".GameKeysActivity"
+            android:theme="@style/Theme.SubSettingsBase"
+            android:label="@string/app_title"
+            android:exported="true">
 
-<receiver android:name=".ScreenStateReceiver" 
-    android:exported="false">
-</receiver>
-</application>
+            <intent-filter>
+                <action android:name="android.service.quicksettings.action.QS_TILE_PREFERENCES" />
+            </intent-filter>
+        </activity>
+
+        <service
+            android:name=".GameKeyTileService"
+            android:icon="@drawable/ic_tile_icon"
+            android:label="Shoulder Buttons"
+            android:exported="true"
+            android:permission="android.permission.BIND_QUICK_SETTINGS_TILE">
+
+            <intent-filter>
+                <action android:name="android.service.quicksettings.action.QS_TILE" />
+            </intent-filter>
+
+            <meta-data
+                android:name="android.service.quicksettings.TILE_ICON"
+                android:resource="@drawable/ic_tile_icon" />
+            <meta-data
+                android:name="android.service.quicksettings.TILE_LABEL"
+                android:value="Game Keys" />
+        </service>
+
+        <receiver android:name=".ScreenStateReceiver"
+            android:exported="false">
+        </receiver>
+
+    </application>
 
 </manifest>

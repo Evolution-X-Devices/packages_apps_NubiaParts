@@ -4,6 +4,7 @@ java_defaults {
         "androidx.core_core",
         "androidx.preference_preference",
         "androidx.compose.material3_material3",
+        "com.google.android.material_material"
     ],
     optimize: {
         enabled: false,

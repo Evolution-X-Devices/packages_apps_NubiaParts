@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/root_view" >
+
+    <com.android.settingslib.widget.MainSwitchPreference
+        android:key="left_game_key_enabled"
+        android:title="@string/game_keys_main_switch_title"
+        android:defaultValue="false" />
+
+
+    <PreferenceCategory
+        android:title="@string/game_keys_sensitivity_category_title">
+
+        <SeekBarPreference
+            android:key="left_sensitivity"
+            android:defaultValue="2" />
+
+    </PreferenceCategory>
+
+</PreferenceScreen>
