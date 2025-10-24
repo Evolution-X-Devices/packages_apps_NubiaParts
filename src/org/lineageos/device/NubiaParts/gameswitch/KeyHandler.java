@@ -1,9 +1,13 @@
 package org.lineageos.device.NubiaParts.gameswitch;
 
 import android.accessibilityservice.AccessibilityService;
+import android.content.BroadcastReceiver;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.content.Context;
+import android.os.Handler;
+import android.os.Looper;
 import android.os.VibrationEffect;
 import android.os.Vibrator;
 import android.os.VibratorManager;
@@ -32,6 +36,7 @@ public class KeyHandler extends AccessibilityService {
 
     private static int usage = 0;
     private static boolean running = false;
+    private boolean ignoreKeys = false;
 
     private static boolean vibrationEnabled;
 
@@ -94,12 +99,27 @@ public class KeyHandler extends AccessibilityService {
 
         mPrefs = mContext.getApplicationContext().getSharedPreferences(
                 Constants.PREF_KEY, Context.MODE_PRIVATE);
+
+        IntentFilter filter = new IntentFilter(Intent.ACTION_SCREEN_ON);
+        filter.addAction(Intent.ACTION_SCREEN_OFF);
+        registerReceiver(screenStateReceiver, filter);
         init();
     }
 
+    private final BroadcastReceiver screenStateReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            if (Intent.ACTION_SCREEN_ON.equals(intent.getAction())) {
+                ignoreKeys = true;
+                Log.d(TAG, "ignoring events temporarily due to screen wake");
+                new Handler(Looper.getMainLooper()).postDelayed(() -> ignoreKeys = false, 1500);
+            }
+        }
+    };
+
     @Override
     protected boolean onKeyEvent(KeyEvent event) {
-        if (running) {
+        if (running && !ignoreKeys) {
             if (event.getAction() == KeyEvent.ACTION_DOWN) {
                 int keyCode = event.getKeyCode();
                 switch (keyCode) {
@@ -189,6 +209,16 @@ public class KeyHandler extends AccessibilityService {
             init();
         }
         return START_STICKY;
+    }
+
+    @Override
+    public void onDestroy() {
+        try {
+            unregisterReceiver(screenStateReceiver);
+        } catch (IllegalArgumentException ignored) {
+            Log.d(TAG, "Screen state receiver is already gone or not registered.");
+        }
+        super.onDestroy();
     }
 }
 
