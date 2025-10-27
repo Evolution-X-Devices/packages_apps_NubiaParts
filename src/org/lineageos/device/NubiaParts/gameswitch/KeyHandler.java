@@ -112,7 +112,7 @@ public class KeyHandler extends AccessibilityService {
             if (Intent.ACTION_SCREEN_ON.equals(intent.getAction())) {
                 ignoreKeys = true;
                 Log.d(TAG, "ignoring events temporarily due to screen wake");
-                new Handler(Looper.getMainLooper()).postDelayed(() -> ignoreKeys = false, 1500);
+                new Handler(Looper.getMainLooper()).postDelayed(() -> ignoreKeys = false, 1950);
             }
         }
     };
