@@ -5,7 +5,6 @@
         <item>@string/slider_for_app_launch</item>
         <item>@string/slider_for_flashlight</item>
         <item>@string/slider_for_ringer</item>
-        <item>@string/slider_for_screenshot</item>
         <item>@string/slider_for_rotation_lock</item>
     </string-array>
 
@@ -14,7 +13,6 @@
         <item>2</item>
         <item>3</item>
         <item>4</item>
-        <item>5</item>
     </string-array>
 
     <string-array name="ringer_behavior_entries" translatable="false">

@@ -189,9 +189,6 @@ public class GameSwitchSettings extends PreferenceFragmentCompat
                     pref.setVisible(true);
                 }
                 break;
-            case ScreenshotAction.ID:
-                // TODO
-                break;
             default:
                 for (Preference pref : dynamicPrefs) {
                     pref.setVisible(false);

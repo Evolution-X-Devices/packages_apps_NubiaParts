@@ -29,9 +29,6 @@ public class KeyHandler extends AccessibilityService {
 
     private static AppLauncher mAppLauncher;
 
-    private static ScreenshotAction mScreenshotAction;
-
-
     private static SwitchControllerBase mSwitchController;
 
     private static int usage = 0;
@@ -91,7 +88,6 @@ public class KeyHandler extends AccessibilityService {
         mFlashlightAction = new FlashlightAction(mContext);
         mRingerAction = new RingerAction(mContext);
         mAppLauncher = new AppLauncher(mContext);
-        mScreenshotAction = new ScreenshotAction(mContext);
         mOrientationLockAction = new OrientationLockAction(mContext);
 
         VibratorManager vm = (VibratorManager) mContext.getSystemService(Context.VIBRATOR_MANAGER_SERVICE);
@@ -170,10 +166,6 @@ public class KeyHandler extends AccessibilityService {
                 break;
             case RingerAction.ID:
                 mSwitchController = mRingerAction;
-                mSwitchController.setup();
-                break;
-            case ScreenshotAction.ID:
-                mSwitchController = mScreenshotAction;
                 mSwitchController.setup();
                 break;
             case OrientationLockAction.ID:

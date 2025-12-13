@@ -25,13 +25,12 @@
     <string name="slider_for_camera">Launch camera</string>
     <string name="slider_for_flashlight">Toggle flashlight</string>
     <string name="slider_for_ringer">Change ringer mode</string>
-    <string name="slider_for_screenshot">Take screenshot</string>
     <string name="slider_for_rotation_lock">Toggle rotation lock</string>
 
     <string name="ringer_behavior_title">Ringer behavior</string>
 
     <string name="ringer_dialog_title">Show panel</string>
-    <string name="ringer_dialog_summary">Show volume panel when ringer mode changed</string>
+    <string name="ringer_dialog_summary">Show volume panel when ringer mode is changed</string>
 
     <string name="ringer_toggle_silent">Toggle silent mode</string>
     <string name="ringer_toggle_vibrate">Toggle vibrate mode</string>

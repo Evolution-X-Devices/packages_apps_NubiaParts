@@ -7,7 +7,7 @@ import com.android.internal.view.RotationPolicy;
 import org.lineageos.device.NubiaParts.gameswitch.SwitchControllerBase;
 
 public class OrientationLockAction extends SwitchControllerBase {
-    public static final int ID = 5;
+    public static final int ID = 4;
 
     private final Context mContext;
     private final String TAG = this.getClass().getSimpleName();
