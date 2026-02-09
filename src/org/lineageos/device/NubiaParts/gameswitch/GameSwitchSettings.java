@@ -113,10 +113,10 @@ public class GameSwitchSettings extends SettingsBasePreferenceFragment
         String appLaunchValue = prefs.getString(Constants.KEY_LAUNCH_APP_NAME, null);
         int usage = Integer.parseInt(prefs.getString(Constants.SLIDER_USAGE_KEY, "0"));
         Preference sliderUsage = findPreference(Constants.SLIDER_USAGE_KEY);
-        Preference vibrationToggle = findPreference(Constants.VIBRATION_KEY);
+        SwitchPreferenceCompat vibrationToggle = findPreference(Constants.VIBRATION_KEY);
         Preference ringerBehavior = findPreference(Constants.RINGER_BEHAVIOR_KEY);
         Preference appLaunch = findPreference(Constants.KEY_LAUNCH_APP_NAME);
-        Preference ringerShowDialog = findPreference(Constants.RINGER_SHOW_DIALOG_KEY);
+        SwitchPreferenceCompat ringerShowDialog = findPreference(Constants.RINGER_SHOW_DIALOG_KEY);
         Preference screenBehaviorCategory = findPreference(Constants.SCREEN_BEHAVIOR_CATEGORY_KEY);
         SwitchPreferenceCompat wakeDevice = findPreference(Constants.WAKE_DEVICE_KEY);
 

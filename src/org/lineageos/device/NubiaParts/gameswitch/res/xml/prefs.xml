@@ -24,7 +24,7 @@
         android:entryValues="@array/ringer_behavior_entry_values"
         android:summary="%s" />
 
-    <SwitchPreference
+    <SwitchPreferenceCompat
         android:key="show_volume_dialog_for_ringer"
         android:title="@string/ringer_dialog_title"
         android:summary="@string/ringer_dialog_summary" />
@@ -33,7 +33,7 @@
         android:key="launch_package_name"
         android:title="@string/app_launch_title" />
 
-    <SwitchPreference
+    <SwitchPreferenceCompat
         android:key="vibrate_on_action"
         android:title="@string/vibration_title"
         android:summary="@string/vibration_summary" />
@@ -41,7 +41,7 @@
     <PreferenceCategory
         android:key="screen_behavior" >
 
-        <SwitchPreference
+        <SwitchPreferenceCompat
             android:key="handle_with_screen_off"
             android:title="@string/screen_off_title"
             android:summary="@string/screen_off_summary" />
