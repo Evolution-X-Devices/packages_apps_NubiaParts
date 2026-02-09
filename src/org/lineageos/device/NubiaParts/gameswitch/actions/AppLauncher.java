@@ -13,6 +13,7 @@ import android.util.Log;
 
 import org.lineageos.device.NubiaParts.gameswitch.Constants;
 import org.lineageos.device.NubiaParts.gameswitch.SwitchControllerBase;
+import org.lineageos.device.NubiaParts.gameswitch.UnlockTrampolineActivity;
 
 import java.util.List;
 
@@ -29,7 +30,6 @@ public class AppLauncher extends SwitchControllerBase {
 
     private String requestedPackage = "";
 
-    private boolean wasDeviceLocked;
 
     KeyguardManager km;
     PackageManager pm;
@@ -48,7 +48,7 @@ public class AppLauncher extends SwitchControllerBase {
     protected void processAction() {
         if (!requestedPackage.isEmpty()) {
             getFocusedPkg();
-            if (focusedPackage.equals(requestedPackage)) {
+            if (focusedPackage.equals(requestedPackage) && !isDeviceLocked()) {
                 exitTask();
             } else {
                 launchPackage(requestedPackage);
@@ -72,9 +72,20 @@ public class AppLauncher extends SwitchControllerBase {
         Intent launchIntent = pm.getLaunchIntentForPackage(pkg);
         if (launchIntent != null) {
             launchIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-            mContext.startActivity(launchIntent);
         } else {
             Log.w(TAG, "No main activity found for package: " + pkg);
+            return;
+        }
+        if (km != null && isDeviceLocked()) {
+            Intent trampoline = new Intent(mContext, UnlockTrampolineActivity.class);
+            trampoline.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+            trampoline.putExtra(
+                    UnlockTrampolineActivity.EXTRA_TARGET_INTENT,
+                    launchIntent
+            );
+            mContext.startActivity(trampoline);
+        } else {
+            mContext.startActivity(launchIntent);
         }
     }
 

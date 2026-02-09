@@ -41,6 +41,14 @@
                 android:resource="@string/settings_summary" />
         </activity>
 
+        <activity
+            android:name=".UnlockTrampolineActivity"
+            android:exported="false"
+            android:excludeFromRecents="true"
+            android:theme="@style/Theme.Transparent"
+            android:taskAffinity=""
+            android:launchMode="singleTask" />
+
         <service
             android:name=".KeyHandler"
             android:exported="true">
