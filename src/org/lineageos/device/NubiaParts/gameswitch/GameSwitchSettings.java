@@ -15,11 +15,11 @@ import android.util.Pair;
 import androidx.preference.ListPreference;
 import androidx.preference.PreferenceCategory;
 import androidx.preference.PreferenceGroup;
-import androidx.preference.PreferenceFragmentCompat;
 import androidx.preference.PreferenceManager;
 import androidx.preference.PreferenceScreen;
 import androidx.preference.Preference;
 import com.android.settingslib.widget.MainSwitchPreference;
+import com.android.settingslib.widget.SettingsBasePreferenceFragment;
 import androidx.preference.SwitchPreference;
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -29,7 +29,7 @@ import org.lineageos.device.NubiaParts.Utils.ResourceUtils;
 import org.lineageos.device.NubiaParts.gameswitch.R;
 import org.lineageos.device.NubiaParts.gameswitch.actions.*;
 
-public class GameSwitchSettings extends PreferenceFragmentCompat
+public class GameSwitchSettings extends SettingsBasePreferenceFragment
         implements SharedPreferences.OnSharedPreferenceChangeListener {
 
     private PackageManager pm;
