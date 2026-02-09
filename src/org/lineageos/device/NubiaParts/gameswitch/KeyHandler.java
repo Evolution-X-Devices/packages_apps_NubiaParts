@@ -1,11 +1,14 @@
 package org.lineageos.device.NubiaParts.gameswitch;
 
 import android.app.Service;
+import android.os.IBinder;
+import android.os.SystemClock;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.Context;
 import android.os.Handler;
 import android.os.Looper;
+import android.os.PowerManager;
 import android.os.VibrationEffect;
 import android.os.Vibrator;
 import android.os.VibratorManager;
@@ -39,10 +42,11 @@ public class KeyHandler extends Service {
     private static String SYSFS_PATH;
 
     private static boolean vibrationEnabled;
+    private static boolean shouldWake = false;
 
     private static SharedPreferences mPrefs;
     private static Vibrator mVibrator;
-    private Context mContext;
+    private static Context mContext;
 
     private static final String TAG = KeyHandler.class.getSimpleName();
 
@@ -118,6 +122,7 @@ public class KeyHandler extends Service {
 
     private static void processAction(int state) {
         if (usage != 0) {
+            if (shouldWake) wakeScreen(mContext);
             mSwitchController.processAction();
             if (vibrationEnabled) doHapticFeedback();
         }
@@ -128,6 +133,8 @@ public class KeyHandler extends Service {
         if (mSwitchController != null) {
             mSwitchController.reset();
         }
+
+        shouldWake = mPrefs.getBoolean(Constants.WAKE_DEVICE_KEY, false);
 
         usage = Integer.parseInt(mPrefs.getString(Constants.SLIDER_USAGE_KEY, "0"));
 
@@ -154,6 +161,16 @@ public class KeyHandler extends Service {
         startMonitoring();
         running = true;
 
+    }
+
+    public static void wakeScreen(Context context) {
+        PowerManager pm = (PowerManager)
+                context.getSystemService(Context.POWER_SERVICE);
+
+        pm.wakeUp(
+                SystemClock.uptimeMillis(),
+                PowerManager.WAKE_REASON_APPLICATION,
+                context.getApplicationInfo().name);
     }
 
     @Override

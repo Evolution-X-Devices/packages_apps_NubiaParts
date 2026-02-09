@@ -9,6 +9,7 @@ import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.os.UserHandle;
+import android.preference.SwitchPreference;
 import android.provider.Settings;
 import android.util.Log;
 import android.util.Pair;
@@ -20,7 +21,6 @@ import androidx.preference.PreferenceScreen;
 import androidx.preference.Preference;
 import com.android.settingslib.widget.MainSwitchPreference;
 import com.android.settingslib.widget.SettingsBasePreferenceFragment;
-import androidx.preference.SwitchPreference;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -117,6 +117,26 @@ public class GameSwitchSettings extends SettingsBasePreferenceFragment
         Preference ringerBehavior = findPreference(Constants.RINGER_BEHAVIOR_KEY);
         Preference appLaunch = findPreference(Constants.KEY_LAUNCH_APP_NAME);
         Preference ringerShowDialog = findPreference(Constants.RINGER_SHOW_DIALOG_KEY);
+        Preference screenBehaviorCategory = findPreference(Constants.SCREEN_BEHAVIOR_CATEGORY_KEY);
+
+        HashSet<Preference> defaultPrefs = new HashSet<Preference>() {{
+            add(sliderUsage);
+            add(screenBehaviorCategory);
+            add(vibrationToggle);
+        }};
+
+        HashSet<Preference> ringerNeeded = new HashSet<Preference>() {{
+            add(ringerBehavior);
+            add(ringerShowDialog);
+        }};
+
+        HashSet<Preference> appLaunchNeeded = new HashSet<Preference>() {{
+            add(appLaunch);
+        }};
+
+        HashSet<Preference> dynamicPrefs = new HashSet<Preference>();
+        dynamicPrefs.addAll(ringerNeeded);
+        dynamicPrefs.addAll(appLaunchNeeded);
 
 
         if (!mainToggle) {
@@ -135,24 +155,10 @@ public class GameSwitchSettings extends SettingsBasePreferenceFragment
             }
             return;
         } else {
-            sliderUsage.setVisible(true);
-            vibrationToggle.setVisible(true);
+            for (Preference pref : defaultPrefs) {
+                pref.setVisible(true);
+            }
         }
-
-        HashSet<Preference> dynamicPrefs = new HashSet<Preference>() {{
-            add(ringerBehavior);
-            add(ringerShowDialog);
-            add(appLaunch);
-            }};
-
-        HashSet<Preference> ringerNeeded = new HashSet<Preference>() {{
-            add(ringerBehavior);
-            add(ringerShowDialog);
-        }};
-
-        HashSet<Preference> appLaunchNeeded = new HashSet<Preference>() {{
-            add(appLaunch);
-        }};
 
         for (Preference pref : dynamicPrefs) {
             pref.setVisible(false);

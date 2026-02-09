@@ -38,4 +38,13 @@
         android:title="@string/vibration_title"
         android:summary="@string/vibration_summary" />
 
+    <PreferenceCategory
+        android:key="screen_behavior" >
+
+        <SwitchPreference
+            android:key="wake_on_action"
+            android:title="@string/wake_title" />
+
+    </PreferenceCategory>
+
 </PreferenceScreen>
