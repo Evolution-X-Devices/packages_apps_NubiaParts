@@ -33,6 +33,14 @@ public class GameSwitchSettings extends SettingsBasePreferenceFragment
         implements SharedPreferences.OnSharedPreferenceChangeListener {
 
     private PackageManager pm;
+
+    Preference sliderUsage;
+    SwitchPreferenceCompat vibrationToggle;
+    Preference ringerBehavior;
+    Preference appLaunch;
+    SwitchPreferenceCompat ringerShowDialog;
+    Preference screenBehaviorCategory;
+    SwitchPreferenceCompat wakeDevice;
     private final String TAG = this.getClass().getSimpleName();
 
     @Override
@@ -48,10 +56,17 @@ public class GameSwitchSettings extends SettingsBasePreferenceFragment
         prefManager.setSharedPreferencesMode(Context.MODE_PRIVATE);
         addPreferencesFromResource(R.xml.prefs);
 
-        Preference appLaunchPref = findPreference(Constants.KEY_LAUNCH_APP_NAME);
 
-        if (appLaunchPref != null) {
-            appLaunchPref.setOnPreferenceClickListener(preference -> {
+        sliderUsage = findPreference(Constants.SLIDER_USAGE_KEY);
+        vibrationToggle = findPreference(Constants.VIBRATION_KEY);
+        ringerBehavior = findPreference(Constants.RINGER_BEHAVIOR_KEY);
+        appLaunch = findPreference(Constants.KEY_LAUNCH_APP_NAME);
+        ringerShowDialog =  findPreference(Constants.RINGER_SHOW_DIALOG_KEY);
+        screenBehaviorCategory = (Preference) findPreference(Constants.SCREEN_BEHAVIOR_CATEGORY_KEY);
+        wakeDevice = findPreference(Constants.WAKE_DEVICE_KEY);
+
+        if (appLaunch != null) {
+            appLaunch.setOnPreferenceClickListener(preference -> {
                 showAppListDialog(requireContext());
                 return true;
             });
@@ -112,23 +127,16 @@ public class GameSwitchSettings extends SettingsBasePreferenceFragment
         boolean mainToggle = prefs.getBoolean(Constants.SLIDER_ENABLE_KEY, false);
         String appLaunchValue = prefs.getString(Constants.KEY_LAUNCH_APP_NAME, null);
         int usage = Integer.parseInt(prefs.getString(Constants.SLIDER_USAGE_KEY, "0"));
-        Preference sliderUsage = findPreference(Constants.SLIDER_USAGE_KEY);
-        SwitchPreferenceCompat vibrationToggle = findPreference(Constants.VIBRATION_KEY);
-        Preference ringerBehavior = findPreference(Constants.RINGER_BEHAVIOR_KEY);
-        Preference appLaunch = findPreference(Constants.KEY_LAUNCH_APP_NAME);
-        SwitchPreferenceCompat ringerShowDialog = findPreference(Constants.RINGER_SHOW_DIALOG_KEY);
-        Preference screenBehaviorCategory = findPreference(Constants.SCREEN_BEHAVIOR_CATEGORY_KEY);
-        SwitchPreferenceCompat wakeDevice = findPreference(Constants.WAKE_DEVICE_KEY);
 
         HashSet<Preference> defaultPrefs = new HashSet<Preference>() {{
             add(sliderUsage);
             add(screenBehaviorCategory);
-            add(vibrationToggle);
+            add((Preference) vibrationToggle);
         }};
 
         HashSet<Preference> ringerNeeded = new HashSet<Preference>() {{
             add(ringerBehavior);
-            add(ringerShowDialog);
+            add((Preference) ringerShowDialog);
         }};
 
         HashSet<Preference> appLaunchNeeded = new HashSet<Preference>() {{
@@ -168,8 +176,6 @@ public class GameSwitchSettings extends SettingsBasePreferenceFragment
         }
 
         switch (usage) {
-            case FlashlightAction.ID:
-                break;
             case AppLauncher.ID:
                 for (Preference pref : appLaunchNeeded) {
                     pref.setVisible(true);
@@ -230,7 +236,7 @@ public class GameSwitchSettings extends SettingsBasePreferenceFragment
         List<String> packageNames = new ArrayList<>();
 
         for (Pair<String, String> pair : labelPackagePairs) {
-            String displayLabel = pair.first + " (" + pair.second + ")";
+            String displayLabel = pair.first + "\n" + "(" + pair.second + ")";
             labels.add(displayLabel);
             packageNames.add(pair.second);
         }
