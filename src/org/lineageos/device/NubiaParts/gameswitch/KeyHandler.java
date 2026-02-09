@@ -1,6 +1,8 @@
 package org.lineageos.device.NubiaParts.gameswitch;
 
 import android.app.Service;
+import android.content.BroadcastReceiver;
+import android.content.IntentFilter;
 import android.os.IBinder;
 import android.os.SystemClock;
 import android.content.Intent;
@@ -42,7 +44,8 @@ public class KeyHandler extends Service {
     private static String SYSFS_PATH;
 
     private static boolean vibrationEnabled;
-    private static boolean shouldWake = false;
+    private static boolean shouldWake;
+    private static boolean screenOffEnabled;
 
     private static SharedPreferences mPrefs;
     private static Vibrator mVibrator;
@@ -100,6 +103,7 @@ public class KeyHandler extends Service {
         pollRunnable = new Runnable() {
             @Override
             public void run() {
+                if (!running) return;
                 int newState = readState();
                 if (newState != -1 && newState != currentState) {
                     currentState = newState;
@@ -111,7 +115,16 @@ public class KeyHandler extends Service {
         };
 
         mainHandler.post(pollRunnable);
+        running = true;
         Log.d(TAG, "Started polling game switch");
+    }
+
+    private static void stopMonitoring() {
+        if (pollRunnable != null) {
+            running = false;
+            mainHandler.removeCallbacks(pollRunnable);
+            Log.d(TAG, "Switch monitoring stopped");
+        }
     }
 
     private static void doHapticFeedback() {
@@ -134,7 +147,7 @@ public class KeyHandler extends Service {
             mSwitchController.reset();
         }
 
-        shouldWake = mPrefs.getBoolean(Constants.WAKE_DEVICE_KEY, false);
+        screenOffEnabled = mPrefs.getBoolean(Constants.HANDLE_SCREEN_OFF_KEY, true);
 
         usage = Integer.parseInt(mPrefs.getString(Constants.SLIDER_USAGE_KEY, "0"));
 
@@ -146,6 +159,7 @@ public class KeyHandler extends Service {
             case AppLauncher.ID:
                 mSwitchController = mAppLauncher;
                 mSwitchController.setup();
+                shouldWake = true;
                 break;
             case RingerAction.ID:
                 mSwitchController = mRingerAction;
@@ -157,13 +171,52 @@ public class KeyHandler extends Service {
                 break;
         }
 
+        if (mSwitchController != mAppLauncher) {
+            shouldWake = (mPrefs.getBoolean(Constants.WAKE_DEVICE_KEY, false) && screenOffEnabled);
+        }
+
+        if (!screenOffEnabled) {
+            registerScreenReceiver(mContext);
+        } else {
+            unregisterScreenReceiver(mContext);
+        }
+
         vibrationEnabled = mPrefs.getBoolean(Constants.VIBRATION_KEY, true);
         startMonitoring();
-        running = true;
-
     }
 
-    public static void wakeScreen(Context context) {
+    private static final BroadcastReceiver screenReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            String action = intent.getAction();
+
+            if (Intent.ACTION_SCREEN_ON.equals(action)) {
+                if (!running) {
+                    startMonitoring();
+                }
+            } else if (Intent.ACTION_SCREEN_OFF.equals(action)) {
+                stopMonitoring();
+            }
+        }
+    };
+
+    private static void registerScreenReceiver(Context context) {
+        IntentFilter filter = new IntentFilter();
+        filter.addAction(Intent.ACTION_SCREEN_ON);
+        filter.addAction(Intent.ACTION_SCREEN_OFF);
+
+        context.registerReceiver(screenReceiver, filter);
+    }
+
+    private static void unregisterScreenReceiver(Context context) {
+        try {
+            context.unregisterReceiver(screenReceiver);
+        } catch (Exception ignored) {
+            Log.w(TAG, "Screen receiver was never registered.");
+        }
+    }
+
+    private static void wakeScreen(Context context) {
         PowerManager pm = (PowerManager)
                 context.getSystemService(Context.POWER_SERVICE);
 
@@ -198,9 +251,7 @@ public class KeyHandler extends Service {
 
     @Override
     public void onDestroy() {
-        if (pollRunnable != null) {
-            mainHandler.removeCallbacks(pollRunnable);
-        }
+        stopMonitoring();
         super.onDestroy();
     }
 }

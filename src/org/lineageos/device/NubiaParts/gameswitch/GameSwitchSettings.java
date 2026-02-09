@@ -9,7 +9,6 @@ import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.os.UserHandle;
-import android.preference.SwitchPreference;
 import android.provider.Settings;
 import android.util.Log;
 import android.util.Pair;
@@ -19,6 +18,7 @@ import androidx.preference.PreferenceGroup;
 import androidx.preference.PreferenceManager;
 import androidx.preference.PreferenceScreen;
 import androidx.preference.Preference;
+import androidx.preference.SwitchPreferenceCompat;
 import com.android.settingslib.widget.MainSwitchPreference;
 import com.android.settingslib.widget.SettingsBasePreferenceFragment;
 import java.util.ArrayList;
@@ -118,6 +118,7 @@ public class GameSwitchSettings extends SettingsBasePreferenceFragment
         Preference appLaunch = findPreference(Constants.KEY_LAUNCH_APP_NAME);
         Preference ringerShowDialog = findPreference(Constants.RINGER_SHOW_DIALOG_KEY);
         Preference screenBehaviorCategory = findPreference(Constants.SCREEN_BEHAVIOR_CATEGORY_KEY);
+        SwitchPreferenceCompat wakeDevice = findPreference(Constants.WAKE_DEVICE_KEY);
 
         HashSet<Preference> defaultPrefs = new HashSet<Preference>() {{
             add(sliderUsage);
@@ -158,6 +159,8 @@ public class GameSwitchSettings extends SettingsBasePreferenceFragment
             for (Preference pref : defaultPrefs) {
                 pref.setVisible(true);
             }
+            wakeDevice.setEnabled(true);
+            wakeDevice.setChecked(prefs.getBoolean(Constants.WAKE_DEVICE_KEY, true));
         }
 
         for (Preference pref : dynamicPrefs) {
@@ -174,6 +177,8 @@ public class GameSwitchSettings extends SettingsBasePreferenceFragment
                 if (appLaunchValue != null) {
                     setAppLaunchLabel(prefs);
                 }
+                wakeDevice.setEnabled(false);
+                wakeDevice.setChecked(true);
                 break;
             case RingerAction.ID:
                 for (Preference pref : ringerNeeded) {

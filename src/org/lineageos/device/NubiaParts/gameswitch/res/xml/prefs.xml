@@ -42,8 +42,14 @@
         android:key="screen_behavior" >
 
         <SwitchPreference
+            android:key="handle_with_screen_off"
+            android:title="@string/screen_off_title"
+            android:summary="@string/screen_off_summary" />
+
+        <SwitchPreferenceCompat
             android:key="wake_on_action"
-            android:title="@string/wake_title" />
+            android:title="@string/wake_title"
+            android:dependency="handle_with_screen_off" />
 
     </PreferenceCategory>
 

@@ -21,7 +21,8 @@
 
     <string name="wake_title">Wake device</string>
 
-    <string name="slider_usage_title">Slider action</string>
+    <string name="screen_off_title">Handle while screen off</string>
+    <string name="screen_off_summary">Allow action while screen is off</string>
 
     <string name="slider_for_app_launch">Launch application</string>
     <string name="slider_for_camera">Launch camera</string>

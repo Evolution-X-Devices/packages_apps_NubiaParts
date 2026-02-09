@@ -12,7 +12,11 @@ public class Constants {
     public static final String RINGER_BEHAVIOR_KEY = "ringer_behavior";
     public static final String RINGER_SHOW_DIALOG_KEY = "show_volume_dialog_for_ringer";
 
+    public static final String SCREEN_BEHAVIOR_CATEGORY_KEY = "screen_behavior";
+
     public static final String WAKE_DEVICE_KEY = "wake_on_action";
+
+    public static final String  HANDLE_SCREEN_OFF_KEY = "handle_with_screen_off";
 
     public static final String HELPER_PACKAGE_NAME =
             "org.lineageos.device.NubiaParts.helper";
