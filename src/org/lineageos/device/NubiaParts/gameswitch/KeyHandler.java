@@ -1,9 +1,7 @@
 package org.lineageos.device.NubiaParts.gameswitch;
 
-import android.accessibilityservice.AccessibilityService;
-import android.content.BroadcastReceiver;
+import android.app.Service;
 import android.content.Intent;
-import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.content.Context;
 import android.os.Handler;
@@ -11,16 +9,16 @@ import android.os.Looper;
 import android.os.VibrationEffect;
 import android.os.Vibrator;
 import android.os.VibratorManager;
-import android.provider.Settings;
-import android.text.TextUtils;
 import android.util.Log;
-import android.view.KeyEvent;
-import android.view.accessibility.AccessibilityEvent;
-
 
 import org.lineageos.device.NubiaParts.gameswitch.actions.*;
+import org.lineageos.device.NubiaParts.gameswitch.R;
 
-public class KeyHandler extends AccessibilityService {
+import java.io.BufferedReader;
+import java.io.FileReader;
+import java.io.IOException;
+
+public class KeyHandler extends Service {
     
 
     private static FlashlightAction mFlashlightAction;
@@ -33,52 +31,28 @@ public class KeyHandler extends AccessibilityService {
 
     private static int usage = 0;
     private static boolean running = false;
-    private boolean ignoreKeys = false;
+
+    private static Runnable pollRunnable;
+    private static Handler mainHandler;
+    private static int currentState = -1;
+
+    private static String SYSFS_PATH;
 
     private static boolean vibrationEnabled;
 
     private static SharedPreferences mPrefs;
-    private Vibrator mVibrator;
+    private static Vibrator mVibrator;
     private Context mContext;
 
-
-    private final String TAG = this.getClass().getSimpleName();
-
+    private static final String TAG = KeyHandler.class.getSimpleName();
 
     public KeyHandler() {
 
     }
 
-    public static boolean isAccessibilityServiceEnabled(Context context) {
-        String serviceId = context.getPackageName() + "/" + KeyHandler.class.getName();
-            String settingValue = Settings.Secure.getString(
-                    context.getContentResolver(),
-                    Settings.Secure.ENABLED_ACCESSIBILITY_SERVICES);
-            if (settingValue != null) {
-                TextUtils.SimpleStringSplitter colonSplitter = new TextUtils.SimpleStringSplitter(':');
-                colonSplitter.setString(settingValue);
-                for (String service : colonSplitter) {
-                    if (service.equalsIgnoreCase(serviceId)) {
-                        return true;
-                    }
-                }
-            }
-        return false;
-    }
-
-
     @Override
-    public void onAccessibilityEvent(AccessibilityEvent event) {
-
-    }
-
-    @Override
-    public void onInterrupt() {
-        boolean handlerPref = mPrefs.getBoolean(Constants.SLIDER_ENABLE_KEY, false);
-        if (handlerPref && !isAccessibilityServiceEnabled(mContext)) {
-            Log.d(TAG, "User disabled accessibility service");
-            mPrefs.edit().putBoolean(Constants.SLIDER_ENABLE_KEY, false).apply();
-        }
+    public IBinder onBind(Intent intent) {
+        return null;
     }
 
     @Override
@@ -96,58 +70,60 @@ public class KeyHandler extends AccessibilityService {
         mPrefs = mContext.getApplicationContext().getSharedPreferences(
                 Constants.PREF_KEY, Context.MODE_PRIVATE);
 
-        IntentFilter filter = new IntentFilter(Intent.ACTION_SCREEN_ON);
-        filter.addAction(Intent.ACTION_SCREEN_OFF);
-        registerReceiver(screenStateReceiver, filter);
+        SYSFS_PATH = getApplicationContext().getResources().getString(R.string.switch_sysfs_path);
+
+        mainHandler = new Handler(Looper.getMainLooper());
+
         init();
     }
 
-    private final BroadcastReceiver screenStateReceiver = new BroadcastReceiver() {
-        @Override
-        public void onReceive(Context context, Intent intent) {
-            if (Intent.ACTION_SCREEN_ON.equals(intent.getAction())) {
-                ignoreKeys = true;
-                Log.d(TAG, "ignoring events temporarily due to screen wake");
-                new Handler(Looper.getMainLooper()).postDelayed(() -> ignoreKeys = false, 1950);
+    private static int readState() {
+        try (BufferedReader reader = new BufferedReader(new FileReader(SYSFS_PATH))) {
+            String line = reader.readLine();
+            if (line != null) {
+                return Integer.parseInt(line.trim());
             }
+        } catch (IOException | NumberFormatException e) {
+            Log.e(TAG, "Failed to read switch state", e);
         }
-    };
-
-    @Override
-    protected boolean onKeyEvent(KeyEvent event) {
-        if (running && !ignoreKeys) {
-            if (event.getAction() == KeyEvent.ACTION_DOWN) {
-                int keyCode = event.getKeyCode();
-                switch (keyCode) {
-                    case KeyEvent.KEYCODE_PROG_GREEN -> {
-                        Log.d(TAG, "Switch moved up");
-                        processAction();
-                        return true;
-                    }
-                    case KeyEvent.KEYCODE_PROG_RED -> {
-                        Log.d(TAG, "Switch moved down");
-                        processAction();
-                        return true;
-                    }
-                }
-            }
-        }
-        return false;
+        return -1;
     }
 
-    private void doHapticFeedback() {
+    private static void startMonitoring() {
+        currentState = readState();
+        Log.d(TAG, "Initial game switch state: " + currentState);
+
+        pollRunnable = new Runnable() {
+            @Override
+            public void run() {
+                int newState = readState();
+                if (newState != -1 && newState != currentState) {
+                    currentState = newState;
+                    Log.d(TAG, "Game switch changed to: " + newState);
+                    processAction(newState);
+                }
+                mainHandler.postDelayed(this, 100);
+            }
+        };
+
+        mainHandler.post(pollRunnable);
+        Log.d(TAG, "Started polling game switch");
+    }
+
+    private static void doHapticFeedback() {
         if (mVibrator != null && mVibrator.hasVibrator()) {
             mVibrator.vibrate(VibrationEffect.createPredefined(VibrationEffect.EFFECT_CLICK));
         }
     }
 
-
-    private void processAction() {
-        mSwitchController.processAction();
-        if (vibrationEnabled) doHapticFeedback();
+    private static void processAction(int state) {
+        if (usage != 0) {
+            mSwitchController.processAction();
+            if (vibrationEnabled) doHapticFeedback();
+        }
     }
 
-    static void init() {
+    private static void init() {
 
         if (mSwitchController != null) {
             mSwitchController.reset();
@@ -175,10 +151,10 @@ public class KeyHandler extends AccessibilityService {
         }
 
         vibrationEnabled = mPrefs.getBoolean(Constants.VIBRATION_KEY, true);
+        startMonitoring();
         running = true;
 
     }
-
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
@@ -205,10 +181,8 @@ public class KeyHandler extends AccessibilityService {
 
     @Override
     public void onDestroy() {
-        try {
-            unregisterReceiver(screenStateReceiver);
-        } catch (IllegalArgumentException ignored) {
-            Log.d(TAG, "Screen state receiver is already gone or not registered.");
+        if (pollRunnable != null) {
+            mainHandler.removeCallbacks(pollRunnable);
         }
         super.onDestroy();
     }

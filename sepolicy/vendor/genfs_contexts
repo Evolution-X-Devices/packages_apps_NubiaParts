@@ -9,4 +9,5 @@ genfscon sysfs /devices/platform/soc/9c0000.qcom,qupv3_i2c_geni_se/99c000.i2c/i2
 genfscon sysfs /devices/platform/soc/9c0000.qcom,qupv3_i2c_geni_se/9a0000.i2c/i2c-3/3-0013/leds/sar0/sensy_config       u:object_r:sysfs_gamekey:s0
 genfscon sysfs /devices/platform/soc/9c0000.qcom,qupv3_i2c_geni_se/9a0000.i2c/i2c-4/4-0013/leds/sar0/sensy_config       u:object_r:sysfs_gamekey:s0
 genfscon sysfs /devices/platform/soc/9c0000.qcom,qupv3_i2c_geni_se/99c000.i2c/i2c-2/2-0012/leds/sar1/sensy_config       u:object_r:sysfs_gamekey:s0
+genfscon sysfs /devices/platform/soc/soc:nubia_game_sw/state  u:object_r:sysfs_gamekey:s0
 genfscon sysfs /class/leds/sar u:object_r:sysfs_gamekey:s0

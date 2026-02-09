@@ -63,30 +63,15 @@ public class GameSwitchSettings extends SettingsBasePreferenceFragment
 
         if (key.equals(Constants.SLIDER_ENABLE_KEY)) {
             boolean value = sharedPreferences.getBoolean(key, false);
-            if (value) {
-                ensureAccessibilityService(requireContext());
+            if (!value) {
+                sendServiceIntent(requireContext(), 2);
             } else {
-                    sendServiceIntent(requireContext(), 2);
+                sendServiceIntent(requireContext(), 1);
             }
         } else {
             sendServiceIntent(requireContext(), 1);
         }
         processLayout(sharedPreferences);
-    }
-
-    private void ensureAccessibilityService(Context context) {
-        if (!KeyHandler.isAccessibilityServiceEnabled(context)) {
-            new AlertDialog.Builder(context)
-                    .setTitle(ResourceUtils.getString("accessibility_service_dialog_title"))
-                    .setMessage(ResourceUtils.getString("accessibility_service_dialog_summary"))
-                    .setPositiveButton(android.R.string.ok, (dialog, which) -> {
-                        Intent intent = new Intent(Settings.ACTION_ACCESSIBILITY_SETTINGS);
-                        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                        context.startActivity(intent);
-                    })
-                    .setNegativeButton(android.R.string.cancel, null)
-                    .show();
-        }
     }
 
     @Override
