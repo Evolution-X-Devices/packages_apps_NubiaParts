@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.app.KeyguardManager;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 
 public class UnlockTrampolineActivity extends Activity {
 
@@ -23,25 +24,30 @@ public class UnlockTrampolineActivity extends Activity {
         KeyguardManager km =
                 (KeyguardManager) getSystemService(KEYGUARD_SERVICE);
         if (km != null) {
-            km.requestDismissKeyguard(this,
-                    new KeyguardManager.KeyguardDismissCallback() {
-                        @Override
-                        public void onDismissSucceeded() {
-                            target.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                            startActivity(target);
-                            finish();
-                        }
+            try {
+                km.requestDismissKeyguard(this,
+                        new KeyguardManager.KeyguardDismissCallback() {
+                            @Override
+                            public void onDismissSucceeded() {
+                                target.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                                startActivity(target);
+                                finish();
+                            }
 
-                        @Override
-                        public void onDismissCancelled() {
-                            finish();
-                        }
+                            @Override
+                            public void onDismissCancelled() {
+                                finish();
+                            }
 
-                        @Override
-                        public void onDismissError() {
-                            finish();
-                        }
-                    });
+                            @Override
+                            public void onDismissError() {
+                                finish();
+                            }
+                        });
+            } catch (Exception e) {
+                Log.w(this.getClass().getSimpleName(), "Keyguard manager became null!");
+                finish();
+            }
         }
     }
 }

@@ -110,6 +110,12 @@ public class AppLauncher extends SwitchControllerBase {
     }
 
     private boolean isDeviceLocked() {
-       return km.isKeyguardLocked();
+        boolean locked = false;
+        try {
+           locked = km.isKeyguardLocked();
+        } catch (Exception e) {
+            Log.w(TAG, "Keyguard manager is null!");
+        }
+       return locked;
     }
 }
