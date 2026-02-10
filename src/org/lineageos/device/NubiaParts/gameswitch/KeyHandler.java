@@ -4,7 +4,10 @@ import android.app.Service;
 import android.content.BroadcastReceiver;
 import android.content.IntentFilter;
 import android.os.IBinder;
+import android.os.IPowerManager;
+import android.os.RemoteException;
 import android.os.SystemClock;
+import android.os.ServiceManager;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.Context;
@@ -49,6 +52,7 @@ public class KeyHandler extends Service {
     private static boolean screenOffEnabled;
 
     private static SharedPreferences mPrefs;
+    private static IPowerManager ipm;
     private static Vibrator mVibrator;
     private static Context mContext;
 
@@ -75,6 +79,9 @@ public class KeyHandler extends Service {
 
         VibratorManager vm = (VibratorManager) mContext.getSystemService(Context.VIBRATOR_MANAGER_SERVICE);
         mVibrator = vm.getDefaultVibrator();
+
+        IBinder b = ServiceManager.getService(Context.POWER_SERVICE);
+        ipm = IPowerManager.Stub.asInterface(b);
 
         mPrefs = mContext.getApplicationContext().getSharedPreferences(
                 Constants.PREF_KEY, Context.MODE_PRIVATE);
@@ -223,13 +230,19 @@ public class KeyHandler extends Service {
     }
 
     private static void wakeScreen(Context context) {
-        PowerManager pm = (PowerManager)
-                context.getSystemService(Context.POWER_SERVICE);
+        try {
+            if (ipm.isInteractive()) {
+                return;
+            }
+            ipm.wakeUp(
+                    SystemClock.uptimeMillis(),
+                    PowerManager.WAKE_REASON_APPLICATION,
+                    mContext.getApplicationInfo().name,
+                    mContext.getPackageName()
+            );
+        } catch (RemoteException ignored) {
 
-        pm.wakeUp(
-                SystemClock.uptimeMillis(),
-                PowerManager.WAKE_REASON_APPLICATION,
-                context.getApplicationInfo().name);
+        }
     }
 
     @Override
