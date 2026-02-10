@@ -31,6 +31,7 @@
     <string name="slider_for_flashlight">Toggle flashlight</string>
     <string name="slider_for_ringer">Change ringer mode</string>
     <string name="slider_for_rotation_lock">Toggle rotation lock</string>
+    <string name="slider_for_dnd">Do not disturb</string>
 
     <string name="ringer_behavior_title">Ringer behavior</string>
 
@@ -40,6 +41,11 @@
     <string name="ringer_toggle_silent">Toggle silent mode</string>
     <string name="ringer_toggle_vibrate">Toggle vibrate mode</string>
     <string name="ringer_cycle">Cycle all modes</string>
+
+    <string name="dnd_behavior_title">Do not disturb mode</string>
+    <string name="dnd_mode_priority">Priority only</string>
+    <string name="dnd_mode_alarms">Alarms only</string>
+    <string name="dnd_mode_silence">No interruptions (silence)</string>
 
     <string name="accessibility_service_description">Handle nubia sliding switch</string>
 

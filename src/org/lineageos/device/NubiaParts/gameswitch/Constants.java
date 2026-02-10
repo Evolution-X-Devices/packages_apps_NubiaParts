@@ -11,6 +11,7 @@ public class Constants {
     public static final String VIBRATION_KEY = "vibrate_on_action";
     public static final String RINGER_BEHAVIOR_KEY = "ringer_behavior";
     public static final String RINGER_SHOW_DIALOG_KEY = "show_volume_dialog_for_ringer";
+    public static final String DND_BEHAVIOR_KEY = "dnd_mode";
 
     public static final String SCREEN_BEHAVIOR_CATEGORY_KEY = "screen_behavior";
 

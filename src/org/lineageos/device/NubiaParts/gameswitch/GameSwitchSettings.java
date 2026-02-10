@@ -9,7 +9,6 @@ import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.os.UserHandle;
-import android.provider.Settings;
 import android.util.Log;
 import android.util.Pair;
 import androidx.preference.ListPreference;
@@ -41,6 +40,7 @@ public class GameSwitchSettings extends SettingsBasePreferenceFragment
     SwitchPreferenceCompat ringerShowDialog;
     Preference screenBehaviorCategory;
     SwitchPreferenceCompat wakeDevice;
+    ListPreference DNDBehavior;
     private final String TAG = this.getClass().getSimpleName();
 
     @Override
@@ -62,6 +62,7 @@ public class GameSwitchSettings extends SettingsBasePreferenceFragment
         ringerBehavior = findPreference(Constants.RINGER_BEHAVIOR_KEY);
         appLaunch = findPreference(Constants.KEY_LAUNCH_APP_NAME);
         ringerShowDialog =  findPreference(Constants.RINGER_SHOW_DIALOG_KEY);
+        DNDBehavior = findPreference(Constants.DND_BEHAVIOR_KEY);
         screenBehaviorCategory = (Preference) findPreference(Constants.SCREEN_BEHAVIOR_CATEGORY_KEY);
         wakeDevice = findPreference(Constants.WAKE_DEVICE_KEY);
 
@@ -146,6 +147,7 @@ public class GameSwitchSettings extends SettingsBasePreferenceFragment
         HashSet<Preference> dynamicPrefs = new HashSet<Preference>();
         dynamicPrefs.addAll(ringerNeeded);
         dynamicPrefs.addAll(appLaunchNeeded);
+        dynamicPrefs.add((Preference) DNDBehavior);
 
 
         if (!mainToggle) {
@@ -190,6 +192,9 @@ public class GameSwitchSettings extends SettingsBasePreferenceFragment
                 for (Preference pref : ringerNeeded) {
                     pref.setVisible(true);
                 }
+                break;
+            case DNDModesAction.ID:
+                DNDBehavior.setVisible(true);
                 break;
             default:
                 for (Preference pref : dynamicPrefs) {

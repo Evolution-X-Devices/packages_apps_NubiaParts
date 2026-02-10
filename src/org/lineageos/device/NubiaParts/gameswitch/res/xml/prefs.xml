@@ -24,6 +24,13 @@
         android:entryValues="@array/ringer_behavior_entry_values"
         android:summary="%s" />
 
+    <ListPreference
+        android:key="dnd_mode"
+        android:title="@string/dnd_behavior_title"
+        android:entries="@array/dnd_mode_entries"
+        android:entryValues="@array/dnd_mode_entry_values"
+        android:summary="%s"/>
+
     <SwitchPreferenceCompat
         android:key="show_volume_dialog_for_ringer"
         android:title="@string/ringer_dialog_title"

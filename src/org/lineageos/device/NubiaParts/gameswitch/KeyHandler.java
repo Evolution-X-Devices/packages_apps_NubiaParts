@@ -31,6 +31,7 @@ public class KeyHandler extends Service {
     private static RingerAction mRingerAction;
 
     private static AppLauncher mAppLauncher;
+    private static DNDModesAction mDNDModesAction;
 
     private static SwitchControllerBase mSwitchController;
 
@@ -70,6 +71,7 @@ public class KeyHandler extends Service {
         mRingerAction = new RingerAction(mContext);
         mAppLauncher = new AppLauncher(mContext);
         mOrientationLockAction = new OrientationLockAction(mContext);
+        mDNDModesAction = new DNDModesAction(mContext);
 
         VibratorManager vm = (VibratorManager) mContext.getSystemService(Context.VIBRATOR_MANAGER_SERVICE);
         mVibrator = vm.getDefaultVibrator();
@@ -169,6 +171,10 @@ public class KeyHandler extends Service {
                 mSwitchController = mOrientationLockAction;
                 mSwitchController.setup();
                 break;
+            case DNDModesAction.ID:
+                mSwitchController = mDNDModesAction;
+                break;
+
         }
 
         if (mSwitchController != mAppLauncher) {
