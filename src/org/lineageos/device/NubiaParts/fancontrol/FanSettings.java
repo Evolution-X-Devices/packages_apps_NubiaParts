@@ -75,7 +75,7 @@ public class FanSettings extends PreferenceFragmentCompat
             if (!value) {
                 sendFanServiceIntent(requireContext(), 2);
             } else {
-                sendFanServiceIntent(requireContext(), 1);
+                sendFanServiceIntent(requireContext(), 3);
             }
         } else {
             sendFanServiceIntent(requireContext(), 3);
