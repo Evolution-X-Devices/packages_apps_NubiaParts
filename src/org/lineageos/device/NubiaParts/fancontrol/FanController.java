@@ -7,6 +7,8 @@ import android.util.Log;
 
 import org.lineageos.device.NubiaParts.Utils.FileUtils;
 
+import java.util.Objects;
+
 public class FanController {
 
     private static final String TAG = FanController.class.getSimpleName();
@@ -14,6 +16,10 @@ public class FanController {
     public static boolean toggle(boolean mode) {
         FileUtils.writeValue(Constants.FAN_TOGGLE_NODE, (mode) ? "1" : "0");
         return true;
+    }
+
+    public static boolean isEnabled() {
+        return Objects.equals(FileUtils.readLine(Constants.FAN_TOGGLE_NODE), "1");
     }
 
     public static String getSpeed() {
