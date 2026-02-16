@@ -30,12 +30,11 @@
         android:label="@string/app_name"
         android:defaultToDeviceProtectedStorage="true"
         android:directBootAware="true"
-        android:theme="@style/Theme.SubSettingsBase"
+        android:theme="@style/Theme.SubSettingsBase.Expressive"
         android:exported="true">
 
         <activity
             android:name=".FanSettingsActivity"
-            android:theme="@style/Theme.SubSettingsBase"
             android:label="@string/app_name"
             android:exported="true">
 
