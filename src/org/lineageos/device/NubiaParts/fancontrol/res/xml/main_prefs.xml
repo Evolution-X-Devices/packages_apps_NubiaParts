@@ -39,7 +39,6 @@
 
     <Preference
         android:key="per_app_fan_speed"
-        android:title="@string/per_app_fan_speed_title"
-        android:dependency="fan_main_switch" />
+        android:title="@string/per_app_fan_speed_title" />
 
 </PreferenceScreen>
