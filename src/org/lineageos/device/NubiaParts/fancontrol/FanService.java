@@ -21,6 +21,8 @@ public class FanService extends Service {
     boolean willChargeBoost;
     boolean pauseOnCall;
 
+    private SharedPreferences mPrefs;
+
     private ScreenStateReceiver mScreenStateReceiver;
     private ChargingMonitor mChargingMonitor;
 
@@ -58,21 +60,26 @@ public class FanService extends Service {
     }
 
     @Override
+    public void onCreate () {
+        super.onCreate();
+        mPrefs = getApplicationContext()
+                .getSharedPreferences(Constants.FAN_PREF_NAME, Context.MODE_PRIVATE);
+
+        mScreenStateReceiver = new ScreenStateReceiver();
+        mChargingMonitor = new ChargingMonitor();
+        mCallDetector = new CallDetector();
+    }
+
+    @Override
     public IBinder onBind(Intent intent) {
         return null;
     }
 
     private void reload() {
-        SharedPreferences prefs = getApplicationContext()
-                .getSharedPreferences(Constants.FAN_PREF_NAME, Context.MODE_PRIVATE);
 
-        willChargeBoost = prefs.getBoolean(Constants.FAN_CHARGING_BOOST_KEY, false);
-        followScreenState = prefs.getBoolean(Constants.SCREEN_STATE_FAN_KEY, false);
-        pauseOnCall = prefs.getBoolean(Constants.MONITOR_CALL_KEY, false);
-
-        mScreenStateReceiver = new ScreenStateReceiver();
-        mChargingMonitor = new ChargingMonitor();
-        mCallDetector = new CallDetector();
+        willChargeBoost = mPrefs.getBoolean(Constants.FAN_CHARGING_BOOST_KEY, false);
+        followScreenState = mPrefs.getBoolean(Constants.SCREEN_STATE_FAN_KEY, false);
+        pauseOnCall = mPrefs.getBoolean(Constants.MONITOR_CALL_KEY, false);
 
         controlFgAppService(true);
         Log.d(TAG, "Started ForegroundAppService");

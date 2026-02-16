@@ -69,6 +69,17 @@ public class ForegroundAppService extends Service {
     }
 
     @Override
+    public void onDestroy() {
+        try {
+            unregisterReceiver(mIntentReceiver);
+            ActivityTaskManager.getService().unregisterTaskStackListener(mTaskListener);
+        } catch (Exception ignored) {
+
+        }
+        super.onDestroy();
+    }
+
+    @Override
     public IBinder onBind(Intent intent) {
         return null;
     }
