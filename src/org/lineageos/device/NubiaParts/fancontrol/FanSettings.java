@@ -27,6 +27,8 @@ import java.util.Collections;
 public class FanSettings extends SettingsBasePreferenceFragment
         implements SharedPreferences.OnSharedPreferenceChangeListener {
 
+    private MainSwitchPreference fanToggle;
+
     @Override
     public void onCreatePreferences(Bundle savedInstanceState, String rootKey) {
         PreferenceManager prefManager = getPreferenceManager();
@@ -37,6 +39,7 @@ public class FanSettings extends SettingsBasePreferenceFragment
 
         Context context = requireContext();
 
+        fanToggle = findPreference(Constants.USER_ENABLE_FAN_KEY);
 
         Preference mapAppPref = findPreference("per_app_fan_speed");
         if (mapAppPref != null) {
@@ -52,6 +55,15 @@ public class FanSettings extends SettingsBasePreferenceFragment
             fanSpeedPref.setUpdatesContinuously(true);
             fanSpeedPref.setShowSeekBarValue(true);
         }
+
+        updateMainSwitch();
+    }
+
+
+    private void updateMainSwitch() {
+       SharedPreferences prefs = getPreferenceManager().getSharedPreferences();
+        fanToggle.setChecked(prefs.getBoolean(Constants.USER_ENABLE_FAN_KEY, false)
+                && FanController.isEnabled());
     }
 
     @Override
@@ -59,6 +71,7 @@ public class FanSettings extends SettingsBasePreferenceFragment
         super.onResume();
         getPreferenceManager().getSharedPreferences()
                 .registerOnSharedPreferenceChangeListener(this);
+        updateMainSwitch();
     }
 
     @Override
@@ -83,7 +96,7 @@ public class FanSettings extends SettingsBasePreferenceFragment
         }
     }
 
-    public boolean sendFanServiceIntent(Context context, int type) {
+    private boolean sendFanServiceIntent(Context context, int type) {
         Intent fanIntent = new Intent(context, FanService.class);
         switch (type) {
             case 1:
