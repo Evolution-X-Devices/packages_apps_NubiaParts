@@ -8,9 +8,9 @@ import androidx.preference.PreferenceManager;
 import androidx.preference.SeekBarPreference;
 import com.android.settingslib.widget.MainSwitchPreference;
 
-import androidx.preference.PreferenceFragmentCompat;
+import com.android.settingslib.widget.SettingsBasePreferenceFragment;
 
-public class LeftKeySettingsFragment extends PreferenceFragmentCompat
+public class LeftKeySettingsFragment extends SettingsBasePreferenceFragment
         implements SharedPreferences.OnSharedPreferenceChangeListener {
 
     private MainSwitchPreference mainSwitch;
