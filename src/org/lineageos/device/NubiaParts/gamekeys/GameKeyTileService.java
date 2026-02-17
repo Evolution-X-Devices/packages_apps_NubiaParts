@@ -111,12 +111,12 @@ public class GameKeyTileService extends TileService {
             newRightState = false; // OFF
             tile.setState(Tile.STATE_INACTIVE);
             tile.setSubtitle(ResourceUtils.getString("tile_state_disabled_subtitle"));
-            unregisterScreenReceiver(this);
+            unregisterScreenReceiver(getApplicationContext());
         }
 
         if (newRightState || newLeftState) {
             tile.setState(Tile.STATE_ACTIVE);
-            registerScreenReceiver(this);
+            registerScreenReceiver(getApplicationContext());
         }
 
         KeyController.setKeyMode(newLeftState, newRightState);
