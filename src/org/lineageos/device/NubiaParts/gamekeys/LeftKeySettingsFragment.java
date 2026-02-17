@@ -6,11 +6,15 @@ import android.os.Bundle;
 
 import androidx.preference.PreferenceManager;
 import androidx.preference.SeekBarPreference;
+import com.android.settingslib.widget.MainSwitchPreference;
 
 import androidx.preference.PreferenceFragmentCompat;
 
 public class LeftKeySettingsFragment extends PreferenceFragmentCompat
         implements SharedPreferences.OnSharedPreferenceChangeListener {
+
+    private MainSwitchPreference mainSwitch;
+    private SeekBarPreference sensySlider;
     @Override
     public void onCreatePreferences(Bundle savedInstanceState, String rootKey) {
 
@@ -20,11 +24,19 @@ public class LeftKeySettingsFragment extends PreferenceFragmentCompat
 
         addPreferencesFromResource(R.xml.prefs_left_key);
 
-        SeekBarPreference pref = findPreference(Constants.Prefs.KEY_LEFT_SHOULDER_SENS);
-        if (pref != null) {
-            pref.setMin(1);
-            pref.setMax(3);
+        mainSwitch = findPreference(Constants.Prefs.KEY_LEFT_MODE);
+
+        sensySlider = findPreference(Constants.Prefs.KEY_LEFT_SHOULDER_SENS);
+        if (sensySlider != null) {
+            sensySlider.setMin(1);
+            sensySlider.setMax(3);
         }
+
+        loadState();
+    }
+
+    private void loadState() {
+        mainSwitch.setChecked(KeyController.getKeyMode(0));
     }
 
     @Override
@@ -32,6 +44,7 @@ public class LeftKeySettingsFragment extends PreferenceFragmentCompat
         super.onResume();
         getPreferenceManager().getSharedPreferences()
                 .registerOnSharedPreferenceChangeListener(this);
+        loadState();
     }
 
     @Override
