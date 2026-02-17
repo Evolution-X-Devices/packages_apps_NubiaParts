@@ -13,22 +13,8 @@ public class KeyController {
     private static final String TAG = KeyController.class.getSimpleName();
 
     public static void setKeyMode(boolean leftMode, boolean rightMode) {
-        if (leftMode) {
-            FileUtils.writeValue(Constants.LEFT_SHOULDER_MODE, String.valueOf(Constants.WAKE_MODE_INT));
-        } else {
-            FileUtils.writeValue(Constants.LEFT_SHOULDER_MODE, String.valueOf(Constants.SLEEP_MODE_INT));
-        }
-
-        if (rightMode) {
-            FileUtils.writeValue(Constants.RIGHT_SHOULDER_MODE, String.valueOf(Constants.WAKE_MODE_INT));
-        } else {
-            FileUtils.writeValue(Constants.RIGHT_SHOULDER_MODE, String.valueOf(Constants.SLEEP_MODE_INT));
-        }
-
-        Log.d(TAG, Constants.LEFT_SHOULDER_MODE + " value is "
-                + FileUtils.readLine(Constants.LEFT_SHOULDER_MODE));
-        Log.d(TAG, Constants.RIGHT_SHOULDER_MODE + " value is "
-                + FileUtils.readLine(Constants.RIGHT_SHOULDER_MODE));
+        setLeftKeyMode(leftMode);
+        setRightKeyMode(rightMode);
     }
 
     public static void initializeKey(int key, int sensitivity) {
