@@ -44,7 +44,13 @@ public class RightKeySettingsFragment extends PreferenceFragmentCompat
     public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
         if (key.equals(Constants.Prefs.KEY_RIGHT_MODE)) {
             boolean value = sharedPreferences.getBoolean(key, false);
-            KeyController.setRightKeyMode(value);
+            if (value) {
+                int sensitivity = sharedPreferences.getInt(Constants.RIGHT_SHOULDER_SENS, 2);
+                int currentSensitivity = KeyController.getSensitivity(1);
+                if (sensitivity != currentSensitivity) KeyController.initializeKey(1, sensitivity);
+            } else {
+                KeyController.setRightKeyMode(false);
+            }
         }
 
         if (key.equals(Constants.Prefs.KEY_RIGHT_SHOULDER_SENS)) {

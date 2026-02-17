@@ -120,9 +120,18 @@ public class GameKeyTileService extends TileService {
         }
 
         KeyController.setKeyMode(newLeftState, newRightState);
-        prefs.edit().putBoolean(Constants.Prefs.KEY_LEFT_MODE, newLeftState)
-                .putBoolean(Constants.Prefs.KEY_RIGHT_MODE, newRightState).apply();
-            tile.updateTile();
+
+        if (newLeftState) {
+            int leftSens = prefs.getInt(Constants.LEFT_SHOULDER_SENS, 2);
+            int currentSens = KeyController.getSensitivity(0);
+            if (leftSens != currentSens) KeyController.setSensitivity(0, leftSens);
+        }
+        if (newRightState) {
+            int rightSens = prefs.getInt(Constants.RIGHT_SHOULDER_SENS, 2);
+            int currentSens = KeyController.getSensitivity(1);
+            if (rightSens != currentSens) KeyController.setSensitivity(0, rightSens);
+        }
+        tile.updateTile();
     }
 
 

@@ -45,7 +45,13 @@ public class LeftKeySettingsFragment extends PreferenceFragmentCompat
     public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
         if (key.equals(Constants.Prefs.KEY_LEFT_MODE)) {
             boolean value = sharedPreferences.getBoolean(key, false);
-            KeyController.setLeftKeyMode(value);
+           if (value) {
+               int sensitivity = sharedPreferences.getInt(Constants.LEFT_SHOULDER_SENS, 2);
+               int currentSensitivity = KeyController.getSensitivity(0);
+               if (sensitivity != currentSensitivity) KeyController.initializeKey(0, sensitivity);
+           } else {
+               KeyController.setLeftKeyMode(false);
+           }
         }
 
         if (key.equals(Constants.Prefs.KEY_LEFT_SHOULDER_SENS)) {

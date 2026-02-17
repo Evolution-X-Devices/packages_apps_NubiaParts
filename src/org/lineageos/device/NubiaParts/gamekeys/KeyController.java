@@ -31,6 +31,14 @@ public class KeyController {
                 + FileUtils.readLine(Constants.RIGHT_SHOULDER_MODE));
     }
 
+    public static void initializeKey(int key, int sensitivity) {
+        switch (key) {
+            case 0 -> setLeftKeyMode(true);
+            case 1 -> setRightKeyMode(true);
+        }
+        setSensitivity(key, sensitivity);
+    }
+
     public static void setLeftKeyMode(boolean mode) {
         if (mode) {
             FileUtils.writeValue(Constants.LEFT_SHOULDER_MODE,
