@@ -61,10 +61,14 @@ public class LeftKeySettingsFragment extends SettingsBasePreferenceFragment
            if (value) {
                int sensitivity = sharedPreferences.getInt(Constants.LEFT_SHOULDER_SENS, 2);
                int currentSensitivity = KeyController.getSensitivity(0);
-               if (sensitivity != currentSensitivity) KeyController.initializeKey(0, sensitivity);
-           } else {
-               KeyController.setLeftKeyMode(false);
-           }
+                if (sensitivity != currentSensitivity) {
+                    KeyController.initializeKey(0, sensitivity);
+                } else {
+                    KeyController.setLeftKeyMode(true);
+                }
+            } else {
+                KeyController.setLeftKeyMode(false);
+            }
         }
 
         if (key.equals(Constants.Prefs.KEY_LEFT_SHOULDER_SENS)) {

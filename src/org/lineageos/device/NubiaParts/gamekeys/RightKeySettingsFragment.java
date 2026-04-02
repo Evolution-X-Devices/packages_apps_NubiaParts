@@ -59,7 +59,11 @@ public class RightKeySettingsFragment extends SettingsBasePreferenceFragment
             if (value) {
                 int sensitivity = sharedPreferences.getInt(Constants.RIGHT_SHOULDER_SENS, 2);
                 int currentSensitivity = KeyController.getSensitivity(1);
-                if (sensitivity != currentSensitivity) KeyController.initializeKey(1, sensitivity);
+                if (sensitivity != currentSensitivity) {
+                    KeyController.initializeKey(1, sensitivity);
+                } else {
+                    KeyController.setRightKeyMode(true);
+                }
             } else {
                 KeyController.setRightKeyMode(false);
             }
