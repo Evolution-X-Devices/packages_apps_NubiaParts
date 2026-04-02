@@ -5,8 +5,8 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 
 import androidx.preference.PreferenceManager;
-import androidx.preference.SeekBarPreference;
 import com.android.settingslib.widget.MainSwitchPreference;
+import com.android.settingslib.widget.SliderPreference;
 
 import com.android.settingslib.widget.SettingsBasePreferenceFragment;
 
@@ -14,7 +14,7 @@ public class LeftKeySettingsFragment extends SettingsBasePreferenceFragment
         implements SharedPreferences.OnSharedPreferenceChangeListener {
 
     private MainSwitchPreference mainSwitch;
-    private SeekBarPreference sensySlider;
+    private SliderPreference sensySlider;
     @Override
     public void onCreatePreferences(Bundle savedInstanceState, String rootKey) {
 
@@ -28,6 +28,10 @@ public class LeftKeySettingsFragment extends SettingsBasePreferenceFragment
 
         sensySlider = findPreference(Constants.Prefs.KEY_LEFT_SHOULDER_SENS);
         if (sensySlider != null) {
+            sensySlider.setSliderIncrement(1);
+            sensySlider.setUpdatesContinuously(true);
+            sensySlider.setHapticFeedbackMode(SliderPreference.HAPTIC_FEEDBACK_MODE_ON_TICKS);
+            sensySlider.setShowSliderValue(true);
             sensySlider.setMin(1);
             sensySlider.setMax(3);
         }

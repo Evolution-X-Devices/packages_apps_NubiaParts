@@ -12,10 +12,9 @@
     <PreferenceCategory
         android:title="@string/game_keys_sensitivity_category_title">
 
-        <SeekBarPreference
+        <com.android.settingslib.widget.SliderPreference
             android:key="right_sensitivity"
-            android:defaultValue="2"
-            app:showSeekBarValue="true" />
+            android:defaultValue="2" />
 
     </PreferenceCategory>
 
