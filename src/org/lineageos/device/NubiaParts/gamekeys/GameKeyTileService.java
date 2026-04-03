@@ -58,7 +58,7 @@ public class GameKeyTileService extends TileService {
             Constants.Prefs.PREF_KEY, Context.MODE_PRIVATE);
         ResourceUtils.init(getApplicationContext());
         Tile tile = getQsTile();
-        tile.setLabel("Shoulder Buttons");
+        tile.setLabel(ResourceUtils.getString("settings_name"));
         if (FileUtils.readLine(Constants.LEFT_SHOULDER_MODE).isEmpty()
         || FileUtils.readLine(Constants.RIGHT_SHOULDER_MODE).isEmpty()) {
             tile.setState(Tile.STATE_UNAVAILABLE);
