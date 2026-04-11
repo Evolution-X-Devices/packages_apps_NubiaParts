@@ -5,6 +5,10 @@ To get started, clone this repository to `packages/apps/NubiaParts` then inherit
 ```
 $(call inherit-product, packages/apps/NubiaParts/config.mk)
 ```
+To include the Sliding switch settings, build `NubiaGameSwitch`. (Kernel and kernel device tree changes is required for this to function!)
+```
+PRODUCT_PACKAGES += NubiaGameSwitch
+```
 
 To include the Fan Control tile, build `NubiaFanControl`.
 ```
