@@ -59,9 +59,13 @@ public class GameKeyTileService extends TileService {
         ResourceUtils.init(getApplicationContext());
         Tile tile = getQsTile();
         tile.setLabel(ResourceUtils.getString("settings_name"));
-        if (FileUtils.readLine(Constants.LEFT_SHOULDER_MODE).isEmpty()
-        || FileUtils.readLine(Constants.RIGHT_SHOULDER_MODE).isEmpty()) {
+        if (FileUtils.readLine(Constants.LEFT_SHOULDER_MODE) == null
+                || FileUtils.readLine(Constants.RIGHT_SHOULDER_MODE) == null
+                || FileUtils.readLine(Constants.LEFT_SHOULDER_MODE).isEmpty()
+                || FileUtils.readLine(Constants.RIGHT_SHOULDER_MODE).isEmpty()) {
             tile.setState(Tile.STATE_UNAVAILABLE);
+            tile.updateTile();
+            return;
         }
 
         boolean leftState = KeyController.getKeyMode(0);
