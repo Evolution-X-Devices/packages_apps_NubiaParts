@@ -25,8 +25,11 @@ public class FanService extends Service {
 
     private ScreenStateReceiver mScreenStateReceiver;
     private ChargingMonitor mChargingMonitor;
-
     private CallDetector mCallDetector;
+
+    private boolean isChargingMonitorRegistered = false;
+    private boolean isCallDetectorRegistered = false;
+    private boolean isScreenStateReceiverRegistered = false;
 
     Context context = this;
 
@@ -60,7 +63,7 @@ public class FanService extends Service {
     }
 
     @Override
-    public void onCreate () {
+    public void onCreate() {
         super.onCreate();
         mPrefs = getApplicationContext()
                 .getSharedPreferences(Constants.FAN_PREF_NAME, Context.MODE_PRIVATE);
@@ -86,29 +89,35 @@ public class FanService extends Service {
         LockManager.unlockFan(getApplicationContext());
 
         if (willChargeBoost) {
-            IntentFilter chargingFilter = new IntentFilter();
-            chargingFilter.addAction(Intent.ACTION_POWER_CONNECTED);
-            chargingFilter.addAction(Intent.ACTION_POWER_DISCONNECTED);
-            registerReceiver(mChargingMonitor, chargingFilter);
-            Log.d(TAG, "Started ChargingMonitor");
+            if (!isChargingMonitorRegistered) {
+                IntentFilter chargingFilter = new IntentFilter();
+                chargingFilter.addAction(Intent.ACTION_POWER_CONNECTED);
+                chargingFilter.addAction(Intent.ACTION_POWER_DISCONNECTED);
+                registerReceiver(mChargingMonitor, chargingFilter);
+                Log.d(TAG, "Started ChargingMonitor");
+            }
         } else {
-           deregisterReceiver(mChargingMonitor);
+            deregisterReceiver(mChargingMonitor);
         }
 
         if (pauseOnCall) {
-            IntentFilter callFilter = new IntentFilter();
-            callFilter.addAction(TelephonyManager.ACTION_PHONE_STATE_CHANGED);
-            registerReceiver(mCallDetector, callFilter);
-            Log.d(TAG, "Started CallDetector");
+            if (!isCallDetectorRegistered) {
+                IntentFilter callFilter = new IntentFilter();
+                callFilter.addAction(TelephonyManager.ACTION_PHONE_STATE_CHANGED);
+                registerReceiver(mCallDetector, callFilter);
+                Log.d(TAG, "Started CallDetector");
+            }
         } else {
             deregisterReceiver(mCallDetector);
         }
 
         if (followScreenState) {
-            IntentFilter screenStateFilter = new IntentFilter();
-            screenStateFilter.addAction(Intent.ACTION_SCREEN_ON);
-            screenStateFilter.addAction(Intent.ACTION_SCREEN_OFF);
-            registerReceiver(mScreenStateReceiver, screenStateFilter);
+            if (!isScreenStateReceiverRegistered) {
+                IntentFilter screenStateFilter = new IntentFilter();
+                screenStateFilter.addAction(Intent.ACTION_SCREEN_ON);
+                screenStateFilter.addAction(Intent.ACTION_SCREEN_OFF);
+                registerReceiver(mScreenStateReceiver, screenStateFilter);
+            }
         } else {
            deregisterReceiver(mScreenStateReceiver);
         }
