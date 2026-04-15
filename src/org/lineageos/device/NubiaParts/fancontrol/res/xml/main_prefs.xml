@@ -9,7 +9,7 @@
         android:title="@string/fan_main_switch_title"
         android:defaultValue="false" />
 
-    <SeekBarPreference
+    <com.android.settingslib.widget.SliderPreference
         android:key="user_fan_speed"
         android:title="@string/user_fan_speed_title"
         android:defaultValue="2"

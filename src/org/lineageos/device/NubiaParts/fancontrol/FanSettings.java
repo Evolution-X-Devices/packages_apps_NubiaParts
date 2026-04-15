@@ -9,10 +9,10 @@ import android.content.pm.PackageManager;
 import android.os.Bundle;
 import androidx.preference.Preference;
 import androidx.preference.PreferenceManager;
-import androidx.preference.SeekBarPreference;
 import androidx.preference.SwitchPreferenceCompat;
 import com.android.settingslib.widget.MainSwitchPreference;
 import com.android.settingslib.widget.SettingsBasePreferenceFragment;
+import com.android.settingslib.widget.SliderPreference;
 
 import android.util.Log;
 import android.util.Pair;
@@ -49,11 +49,13 @@ public class FanSettings extends SettingsBasePreferenceFragment
             });
         }
 
-        SeekBarPreference fanSpeedPref = findPreference(Constants.USER_FAN_SPEED_KEY);
+        SliderPreference fanSpeedPref = findPreference(Constants.USER_FAN_SPEED_KEY);
         if (fanSpeedPref != null) {
-            fanSpeedPref.setSeekBarIncrement(1);
+            fanSpeedPref.setSliderIncrement(1);
             fanSpeedPref.setUpdatesContinuously(true);
-            fanSpeedPref.setShowSeekBarValue(true);
+            fanSpeedPref.setHapticFeedbackMode(SliderPreference.HAPTIC_FEEDBACK_MODE_ON_TICKS);
+            fanSpeedPref.setTickVisible(true);
+            fanSpeedPref.setShowSliderValue(true);
         }
 
         updateMainSwitch();
