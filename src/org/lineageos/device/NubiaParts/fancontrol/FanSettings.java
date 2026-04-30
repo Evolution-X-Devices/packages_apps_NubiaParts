@@ -22,7 +22,6 @@ import androidx.annotation.*;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Collections;
 
 public class FanSettings extends SettingsBasePreferenceFragment
         implements SharedPreferences.OnSharedPreferenceChangeListener {
@@ -37,14 +36,13 @@ public class FanSettings extends SettingsBasePreferenceFragment
 
         addPreferencesFromResource(R.xml.main_prefs);
 
-        Context context = requireContext();
-
         fanToggle = findPreference(Constants.USER_ENABLE_FAN_KEY);
 
         Preference mapAppPref = findPreference("per_app_fan_speed");
         if (mapAppPref != null) {
             mapAppPref.setOnPreferenceClickListener(preference -> {
-                showAppListDialog(requireContext());
+                Intent i = new Intent(requireContext(), ApplicationListActivity.class);
+                startActivity(i);
                 return true;
             });
         }
@@ -114,64 +112,6 @@ public class FanSettings extends SettingsBasePreferenceFragment
         }
         context.startService(fanIntent);
         return true;
-    }
-
-    private void showAppListDialog(Context context) {
-        PackageManager pm = context.getPackageManager();
-        List<ApplicationInfo> apps = pm.getInstalledApplications(PackageManager.GET_META_DATA);
-
-        // Store label + package name pairs
-        List<Pair<String, String>> labelPackagePairs = new ArrayList<>();
-
-        for (ApplicationInfo app : apps) {
-            if (pm.getLaunchIntentForPackage(app.packageName) != null) {
-                String label = pm.getApplicationLabel(app).toString();
-                labelPackagePairs.add(new Pair<>(label, app.packageName));
-            }
-        }
-
-        // Sort by label (case-insensitive)
-        labelPackagePairs.sort((o1, o2) -> o1.first.compareToIgnoreCase(o2.first));
-
-        // Extract sorted lists
-        List<String> labels = new ArrayList<>();
-        List<String> packageNames = new ArrayList<>();
-
-        for (Pair<String, String> pair : labelPackagePairs) {
-            labels.add(pair.first);
-            packageNames.add(pair.second);
-        }
-
-        new AlertDialog.Builder(context)
-                .setTitle("Select App")
-                .setItems(labels.toArray(new String[0]), (dialog, which) -> {
-                    String selectedPackage = packageNames.get(which);
-                    showValueSelector(requireContext(), selectedPackage);
-                })
-                .show();
-    }
-
-    private void showValueSelector(Context context, String packageName) {
-        String[] labels = { "Default", "Speed 1", "Speed 2", "Speed 3", "Speed 4", "Speed 5" };
-        String[] values = { null, "1", "2", "3", "4", "5" };
-
-        SharedPreferences prefs = context.getSharedPreferences(
-                Constants.FAN_PREF_NAME, Context.MODE_PRIVATE);
-
-        new AlertDialog.Builder(context)
-                .setTitle("Select Speed for " + packageName)
-                .setItems(labels, (dialog, which) -> {
-                    SharedPreferences.Editor editor = prefs.edit();
-                    if (values[which] == null) {
-                        editor.remove(packageName);
-                        Toast.makeText(context, "Removed mapping for " + packageName, Toast.LENGTH_SHORT).show();
-                    } else {
-                        editor.putString(packageName, values[which]);
-                        Toast.makeText(context, "Set " + packageName + " to speed " + values[which], Toast.LENGTH_SHORT).show();
-                    }
-                    editor.apply();
-                })
-                .show();
     }
 
 }

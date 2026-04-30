@@ -129,27 +129,31 @@ public class ForegroundAppService extends Service {
                 if (focusedTask != null && focusedTask.topActivity != null) {
                     ComponentName taskComponentName = focusedTask.topActivity;
                     String foregroundApp = taskComponentName.getPackageName();
-                    Log.d(TAG,"NEW foreground app" + foregroundApp);
+                    Log.d(TAG,"NEW foreground app: " + foregroundApp);
                     if (!foregroundApp.equals(mPreviousApp)) {
                         mPreviousApp = foregroundApp;
                         if (prefs.contains(foregroundApp)) {
                             Log.d(TAG, foregroundApp + " found in speed list");
-                            String fanSpeed = prefs.getString(foregroundApp, null);
-                            if (fanSpeed != null) {
+                            int fanSpeed = prefs.getInt(foregroundApp, 0);
+                            if (fanSpeed != 0) {
                                 Log.d(TAG, "Setting fan speed for " + foregroundApp);
-                                FanController.setSpeed(getApplicationContext(), parseInt(fanSpeed));
+                                FanController.setSpeed(getApplicationContext(), fanSpeed);
                                 cancelAllToasts();
-                                showToast("Set fan speed " + fanSpeed + " for "
-                                + getAppNameFromPackage(getApplicationContext(), foregroundApp));
+                                showToast(
+                                        "Set fan speed "
+                                        + fanSpeed + " for "
+                                + getAppNameFromPackage(getApplicationContext(), foregroundApp)
+                                );
                             }
                         } else {
                             if (!FanController.getSpeed().equals(
-                                    FanController.getUserSpeed(getApplicationContext())))
-                            {
+                                    FanController.getUserSpeed(getApplicationContext()))) {
                                 FanController.applyUserSpeed(getApplicationContext());
                                 cancelAllToasts();
-                                showToast("Reset fan speed to " +
-                                        FanController.getUserSpeed(getApplicationContext()));
+                                showToast(
+                                        "Reset fan speed to " +
+                                        FanController.getUserSpeed(getApplicationContext())
+                                );
                             }
                         }
 

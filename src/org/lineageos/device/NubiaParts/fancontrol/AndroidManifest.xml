@@ -60,6 +60,9 @@
         <activity android:name=".FanSettings"
             android:exported="false" />
 
+        <activity android:name=".ApplicationListActivity"
+            android:exported="false" />
+
         <service
             android:name=".FanService"
             android:exported="false" />
