@@ -33,13 +33,9 @@ public class ForegroundAppService extends Service {
     private String mPreviousApp;
     private SharedPreferences prefs;
 
-    public static boolean isRunning = false;
-
     private final BroadcastReceiver mIntentReceiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
-             prefs = context.getApplicationContext().getSharedPreferences(
-                    Constants.FAN_PREF_NAME, Context.MODE_PRIVATE);
              mPreviousApp = " ";
 
             if (!FanController.getSpeed().equals(FanController.getUserSpeed(
@@ -57,14 +53,16 @@ public class ForegroundAppService extends Service {
         } catch (RemoteException e) {
             Log.d(TAG, "Unable to register TaskStackListener");
         }
+
+        prefs = this.getApplicationContext().getSharedPreferences(
+                Constants.FAN_PREF_NAME, Context.MODE_PRIVATE);
+
         registerReceiver();
-        isRunning = true;
     }
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
         if (DEBUG) Log.d(TAG, "Starting service");
-        isRunning = true;
         return START_STICKY;
     }
 
@@ -91,7 +89,6 @@ public class ForegroundAppService extends Service {
     }
 
     public void cancelAllToasts() {
-
         new Handler(Looper.getMainLooper()).post(() -> {
             try {
                 Toast dummyToast = Toast.makeText(

@@ -128,12 +128,13 @@ public class FanService extends Service {
 
     private void controlFgAppService(boolean mode) {
         if (mode) {
-            // start fg service
-            if (!ForegroundAppService.isRunning)
                 context.startService(new Intent(context, ForegroundAppService.class));
         } else {
-            if (ForegroundAppService.isRunning)
+            try {
                 context.stopService(new Intent(context, ForegroundAppService.class));
+            } catch (Exception ignored) {
+                // not running
+            }
         }
     }
 
