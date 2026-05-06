@@ -27,6 +27,7 @@ public class FanSettings extends SettingsBasePreferenceFragment
         implements SharedPreferences.OnSharedPreferenceChangeListener {
 
     private MainSwitchPreference fanToggle;
+    private SliderPreference fanSpeedPref;
 
     @Override
     public void onCreatePreferences(Bundle savedInstanceState, String rootKey) {
@@ -47,7 +48,7 @@ public class FanSettings extends SettingsBasePreferenceFragment
             });
         }
 
-        SliderPreference fanSpeedPref = findPreference(Constants.USER_FAN_SPEED_KEY);
+        fanSpeedPref = findPreference(Constants.USER_FAN_SPEED_KEY);
         if (fanSpeedPref != null) {
             fanSpeedPref.setSliderIncrement(1);
             fanSpeedPref.setUpdatesContinuously(true);
@@ -61,9 +62,7 @@ public class FanSettings extends SettingsBasePreferenceFragment
 
 
     private void updateMainSwitch() {
-       SharedPreferences prefs = getPreferenceManager().getSharedPreferences();
-        fanToggle.setChecked(prefs.getBoolean(Constants.USER_ENABLE_FAN_KEY, false)
-                && FanController.isEnabled());
+        fanToggle.setChecked(FanController.isEnabled());
     }
 
     @Override
@@ -91,6 +90,8 @@ public class FanSettings extends SettingsBasePreferenceFragment
             } else {
                 sendFanServiceIntent(requireContext(), 3);
             }
+            fanSpeedPref.setEnabled(value);
+            fanToggle.setChecked(value);
         } else {
             sendFanServiceIntent(requireContext(), 3);
         }
