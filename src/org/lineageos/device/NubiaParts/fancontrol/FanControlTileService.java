@@ -42,31 +42,23 @@ public class FanControlTileService extends TileService {
         Tile tile = getQsTile();
         tile.setLabel(context.getString(R.string.tile_title));
         if (FanController.getSpeed() != null) {
-            refreshTile(prefs.getBoolean(Constants.USER_ENABLE_FAN_KEY, false)
-                    && FanController.isEnabled());
+            refreshTile(FanController.isEnabled());
         } else {
             tile.setState(Tile.STATE_UNAVAILABLE);
             tile.updateTile();
         }
-
     }
 
     @Override
     public void onClick() {
-            Tile tile = getQsTile();
-            if (tile.getState() == Tile.STATE_ACTIVE) {
-                prefs.edit().putBoolean(Constants.USER_ENABLE_FAN_KEY, false).apply();
-                Intent intent = new Intent(context, FanService.class);
-                intent.setAction(Constants.INTENT_FAN_STOP);
-                context.startService(intent);
-                refreshTile(false);
-            } else {
-                prefs.edit().putBoolean(Constants.USER_ENABLE_FAN_KEY, true).apply();
-                Intent intent = new Intent(context, FanService.class);
-                intent.setAction(Constants.INTENT_FAN_RELOAD);
-                context.startService(intent);
-                refreshTile(true);
-            }
+        Tile tile = getQsTile();
+        boolean newState = !(tile.getState() == Tile.STATE_ACTIVE);
+        Intent intent = new Intent(context, FanService.class);
+        prefs.edit().putBoolean(Constants.USER_ENABLE_FAN_KEY, newState).apply();
+        String action = (newState) ? Constants.INTENT_FAN_RELOAD : Constants.INTENT_FAN_STOP;
+        intent.setAction(action);
+        context.startService(intent);
+        refreshTile(newState);
     }
     
     private void refreshTile(boolean state) {
