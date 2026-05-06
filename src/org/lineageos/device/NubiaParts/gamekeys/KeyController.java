@@ -17,6 +17,13 @@ public class KeyController {
         setRightKeyMode(rightMode);
     }
 
+    public static void setKeyMode(int keyInt, boolean state) {
+        switch (keyInt) {
+            case 0 -> setLeftKeyMode(state);
+            case 1 -> setRightKeyMode(state);
+        }
+    }
+
     public static void initializeKey(int key, int sensitivity) {
         switch (key) {
             case 0 -> setLeftKeyMode(true);

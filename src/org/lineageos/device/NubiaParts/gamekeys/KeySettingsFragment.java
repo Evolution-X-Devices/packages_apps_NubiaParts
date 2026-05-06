@@ -10,23 +10,41 @@ import com.android.settingslib.widget.SliderPreference;
 
 import com.android.settingslib.widget.SettingsBasePreferenceFragment;
 
-public class LeftKeySettingsFragment extends SettingsBasePreferenceFragment
+public class KeySettingsFragment extends SettingsBasePreferenceFragment
         implements SharedPreferences.OnSharedPreferenceChangeListener {
 
     private MainSwitchPreference mainSwitch;
     private SliderPreference sensySlider;
+
+    private int keyInt;
+
     @Override
     public void onCreatePreferences(Bundle savedInstanceState, String rootKey) {
+
+        Bundle args = getArguments();
+        keyInt = args.getInt("type", -1);
+
+        switch (keyInt) {
+            case 0 -> {
+                addPreferencesFromResource(R.xml.prefs_left_key);
+                sensySlider = findPreference(Constants.Prefs.KEY_LEFT_SHOULDER_SENS);
+                mainSwitch = findPreference(Constants.Prefs.KEY_LEFT_MODE);
+            }
+            case 1 -> {
+                addPreferencesFromResource(R.xml.prefs_right_key);
+                sensySlider = findPreference(Constants.Prefs.KEY_RIGHT_SHOULDER_SENS);
+                mainSwitch = findPreference(Constants.Prefs.KEY_RIGHT_MODE);
+            }
+            case -1 -> {
+                getParentFragmentManager().popBackStack();
+                getActivity().finish();
+            }
+        }
 
         PreferenceManager prefManager = getPreferenceManager();
         prefManager.setSharedPreferencesName(Constants.Prefs.PREF_KEY);
         prefManager.setSharedPreferencesMode(Context.MODE_PRIVATE);
 
-        addPreferencesFromResource(R.xml.prefs_left_key);
-
-        mainSwitch = findPreference(Constants.Prefs.KEY_LEFT_MODE);
-
-        sensySlider = findPreference(Constants.Prefs.KEY_LEFT_SHOULDER_SENS);
         if (sensySlider != null) {
             sensySlider.setSliderIncrement(1);
             sensySlider.setUpdatesContinuously(true);
@@ -40,7 +58,7 @@ public class LeftKeySettingsFragment extends SettingsBasePreferenceFragment
     }
 
     private void loadState() {
-        mainSwitch.setChecked(KeyController.getKeyMode(0));
+        mainSwitch.setChecked(KeyController.getKeyMode(keyInt));
     }
 
     @Override
@@ -60,24 +78,24 @@ public class LeftKeySettingsFragment extends SettingsBasePreferenceFragment
 
     @Override
     public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
-        if (key.equals(Constants.Prefs.KEY_LEFT_MODE)) {
+        if (key.equals(mainSwitch.getKey())) {
             boolean value = sharedPreferences.getBoolean(key, false);
            if (value) {
-               int sensitivity = sharedPreferences.getInt(Constants.LEFT_SHOULDER_SENS, 2);
-               int currentSensitivity = KeyController.getSensitivity(0);
+               int sensitivity = sharedPreferences.getInt(sensySlider.getKey(), 2);
+               int currentSensitivity = KeyController.getSensitivity(keyInt);
                 if (sensitivity != currentSensitivity) {
-                    KeyController.initializeKey(0, sensitivity);
+                    KeyController.initializeKey(keyInt, sensitivity);
                 } else {
-                    KeyController.setLeftKeyMode(true);
+                    KeyController.setKeyMode(keyInt, true);
                 }
             } else {
-                KeyController.setLeftKeyMode(false);
+               KeyController.setKeyMode(keyInt, false);
             }
         }
 
-        if (key.equals(Constants.Prefs.KEY_LEFT_SHOULDER_SENS)) {
+        if (key.equals(sensySlider.getKey())) {
             int value = sharedPreferences.getInt(key, 2);
-            KeyController.setSensitivity(0, value);
+            KeyController.setSensitivity(keyInt, value);
         }
 
     }
