@@ -3,7 +3,6 @@ package org.lineageos.device.NubiaParts.gamekeys;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentPagerAdapter;
 import androidx.viewpager.widget.ViewPager;
 
@@ -31,7 +30,7 @@ public class GameKeysActivity extends CollapsingToolbarBaseActivity {
 
     Fragment rightFrag = new KeySettingsFragment();
     Bundle rightArgs = new Bundle();
-    rightArgs.putInt("type" , 1);
+    rightArgs.putInt("type", 1);
     rightFrag.setArguments(rightArgs);
 
 
