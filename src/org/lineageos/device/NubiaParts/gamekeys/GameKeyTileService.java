@@ -133,7 +133,7 @@ public class GameKeyTileService extends TileService {
         if (newRightState) {
             int rightSens = prefs.getInt(Constants.RIGHT_SHOULDER_SENS, 2);
             int currentSens = KeyController.getSensitivity(1);
-            if (rightSens != currentSens) KeyController.setSensitivity(0, rightSens);
+            if (rightSens != currentSens) KeyController.setSensitivity(1, rightSens);
         }
         tile.updateTile();
     }
