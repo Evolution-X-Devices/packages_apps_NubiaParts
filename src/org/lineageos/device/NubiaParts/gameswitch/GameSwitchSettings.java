@@ -41,6 +41,12 @@ public class GameSwitchSettings extends SettingsBasePreferenceFragment
     Preference screenBehaviorCategory;
     SwitchPreferenceCompat wakeDevice;
     ListPreference DNDBehavior;
+
+    HashSet<Preference> defaultPrefs;
+    HashSet<Preference> ringerNeeded;
+    HashSet<Preference> appLaunchNeeded;
+    HashSet<Preference> dynamicPrefs;
+
     private final String TAG = this.getClass().getSimpleName();
 
     @Override
@@ -65,6 +71,26 @@ public class GameSwitchSettings extends SettingsBasePreferenceFragment
         DNDBehavior = findPreference(Constants.DND_BEHAVIOR_KEY);
         screenBehaviorCategory = (Preference) findPreference(Constants.SCREEN_BEHAVIOR_CATEGORY_KEY);
         wakeDevice = findPreference(Constants.WAKE_DEVICE_KEY);
+
+        defaultPrefs = new HashSet<Preference>() {{
+            add(sliderUsage);
+            add(screenBehaviorCategory);
+            add((Preference) vibrationToggle);
+        }};
+
+        ringerNeeded = new HashSet<Preference>() {{
+            add(ringerBehavior);
+            add((Preference) ringerShowDialog);
+        }};
+
+        appLaunchNeeded = new HashSet<Preference>() {{
+            add(appLaunch);
+        }};
+
+        dynamicPrefs = new HashSet<Preference>();
+        dynamicPrefs.addAll(ringerNeeded);
+        dynamicPrefs.addAll(appLaunchNeeded);
+        dynamicPrefs.add((Preference) DNDBehavior);
 
         if (appLaunch != null) {
             appLaunch.setOnPreferenceClickListener(preference -> {
@@ -128,27 +154,6 @@ public class GameSwitchSettings extends SettingsBasePreferenceFragment
         boolean mainToggle = prefs.getBoolean(Constants.SLIDER_ENABLE_KEY, false);
         String appLaunchValue = prefs.getString(Constants.KEY_LAUNCH_APP_NAME, null);
         int usage = Integer.parseInt(prefs.getString(Constants.SLIDER_USAGE_KEY, "0"));
-
-        HashSet<Preference> defaultPrefs = new HashSet<Preference>() {{
-            add(sliderUsage);
-            add(screenBehaviorCategory);
-            add((Preference) vibrationToggle);
-        }};
-
-        HashSet<Preference> ringerNeeded = new HashSet<Preference>() {{
-            add(ringerBehavior);
-            add((Preference) ringerShowDialog);
-        }};
-
-        HashSet<Preference> appLaunchNeeded = new HashSet<Preference>() {{
-            add(appLaunch);
-        }};
-
-        HashSet<Preference> dynamicPrefs = new HashSet<Preference>();
-        dynamicPrefs.addAll(ringerNeeded);
-        dynamicPrefs.addAll(appLaunchNeeded);
-        dynamicPrefs.add((Preference) DNDBehavior);
-
 
         if (!mainToggle) {
             boolean hideRest = false;
