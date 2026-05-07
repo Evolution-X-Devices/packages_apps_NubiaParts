@@ -4,8 +4,12 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.os.Handler;
+import android.os.Looper;
 import android.service.quicksettings.Tile;
 import android.service.quicksettings.TileService;
+
+import org.lineageos.device.NubiaParts.SharedConstants;
 import org.lineageos.device.NubiaParts.Utils.FileUtils;
 import org.lineageos.device.NubiaParts.Utils.ResourceUtils;
 
@@ -55,18 +59,25 @@ public class BypassChargingTile extends TileService {
 
     @Override
     public void onClick() {
-        Tile tile = getQsTile();
-        ChargingController.setBypass(!ChargingController.isChargingBypassed());
-        if (ChargingController.isChargingBypassed()) {
-            tile.setState(Tile.STATE_ACTIVE);
-            tile.setSubtitle(ResourceUtils.getString("tile_enabled"));
-            NotificationHandler.showPersistentNotification(getApplicationContext());
-        } else {
-            NotificationHandler.clearPersistentNotification(getApplicationContext());
-            tile.setState(Tile.STATE_INACTIVE);
-            tile.setSubtitle(ResourceUtils.getString("tile_disabled"));
-        }
-        tile.updateTile();
+        sendServiceIntent(!ChargingController.isChargingBypassed());
+        new Handler(Looper.getMainLooper()).postDelayed(() -> {
+            Tile tile = getQsTile();
+            if (ChargingController.isChargingBypassed()) {
+                tile.setState(Tile.STATE_ACTIVE);
+                tile.setSubtitle(ResourceUtils.getString("tile_enabled"));
+            } else {
+                tile.setState(Tile.STATE_INACTIVE);
+                tile.setSubtitle(ResourceUtils.getString("tile_disabled"));
+            }
+            tile.updateTile();
+        }, 100);
+    }
+
+    private void sendServiceIntent(boolean state) {
+        Intent controller = new Intent(getApplicationContext(), ChargingController.class);
+        controller.setAction(state ? SharedConstants.Intent.REMOTE_START
+                : SharedConstants.Intent.REMOTE_STOP);
+        getApplicationContext().startService(controller);
     }
 
     @Override

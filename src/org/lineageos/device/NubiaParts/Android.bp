@@ -1,11 +1,16 @@
 java_defaults {
     name: "NubiaParts_defaults",
+    defaults: [
+        "SettingsLibDefaults",
+    ],
     static_libs: [
         "androidx.core_core",
         "androidx.preference_preference",
         "androidx.compose.material3_material3",
-        "com.google.android.material_material"
+        "com.google.android.material_material",
+        "NubiaPartsRes_shared",
     ],
+    srcs : ["SharedConstants.java"],
     optimize: {
         enabled: false,
     },
@@ -22,8 +27,8 @@ java_defaults {
 android_app {
     name: "NubiaFanControl",
     srcs: [
-    "Utils/*.java",
-    "fancontrol/*.java",
+        "Utils/*.java",
+        "fancontrol/*.java",
     ],
     manifest: "fancontrol/AndroidManifest.xml",
 
@@ -33,8 +38,8 @@ android_app {
 
     defaults: [
         "NubiaParts_defaults",
-        "SettingsLibDefaults",
     ],
+    required: ["NubiaParts_main"],
 }
 
 android_app {
@@ -51,8 +56,8 @@ android_app {
 
     defaults: [
         "NubiaParts_defaults",
-        "SettingsLibDefaults",
     ],
+    required: ["NubiaParts_main"],
 }
 
 android_app {
@@ -70,11 +75,11 @@ android_app {
 
     defaults: [
         "NubiaParts_defaults",
-        "SettingsLibDefaults",
     ],
     required: [
         "NubiaPartsHelper",
-        "privapp_whitelist_gameswitch"
+        "privapp_whitelist_gameswitch",
+        "NubiaParts_main",
     ],
 }
 
@@ -105,7 +110,27 @@ android_app {
     defaults: [
         "NubiaParts_defaults",
     ],
-    required: ["privapp_whitelist_nubia_power_utils"],
+    required: [
+        "privapp_whitelist_nubia_power_utils",
+        "NubiaParts_main",
+    ],
+}
+
+android_app {
+    name: "NubiaParts_main",
+    defaults: ["NubiaParts_defaults"],
+    srcs: [
+        "NubiaPartsActivity.java",
+        "NubiaPartsFragment.java",
+    ],
+    manifest: "AndroidManifest.xml",
+}
+
+android_library {
+    name: "NubiaPartsRes_shared",
+    resource_dirs: ["res"],
+    manifest: "AndroidManifest_res.xml",
+    srcs: [],
 }
 
 prebuilt_etc {

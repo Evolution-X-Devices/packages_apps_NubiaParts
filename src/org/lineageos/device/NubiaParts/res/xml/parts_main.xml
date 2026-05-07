@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:title="@string/nubia_parts_title"
+    android:id="@+id/root_view">
+
+    <PreferenceCategory
+        android:title="@string/nubia_parts_fan_category_title"
+        android:key="nubia_parts_fan_category">
+
+    </PreferenceCategory>
+
+    <PreferenceCategory
+        android:title="@string/nubia_parts_power_category_title"
+        android:key="nubia_parts_power_category">
+
+    </PreferenceCategory>
+
+    <PreferenceCategory
+        android:title="@string/nubia_parts_buttons_category_title"
+        android:key="nubia_parts_buttons_category">
+
+    </PreferenceCategory>
+
+</PreferenceScreen>

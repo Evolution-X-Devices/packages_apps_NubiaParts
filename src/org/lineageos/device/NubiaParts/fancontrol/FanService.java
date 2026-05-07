@@ -13,10 +13,11 @@ import android.provider.Telephony;
 import android.telephony.TelephonyManager;
 import android.util.Log;
 
+import org.lineageos.device.NubiaParts.SharedConstants;
+
 
 public class FanService extends Service {
 
-    boolean userWantsFanEnabled;
     boolean followScreenState;
     boolean willChargeBoost;
     boolean pauseOnCall;
@@ -43,12 +44,14 @@ public class FanService extends Service {
                 Log.d(TAG, "Boot has completed, restoring fan service!");
             }
 
-            if (Constants.INTENT_FAN_RELOAD.equals(action)) {
+            if (Constants.INTENT_FAN_RELOAD.equals(action)
+                    || SharedConstants.Intent.REMOTE_START.equals(action)) {
                 Log.d(TAG, "Reloading fan service!");
                 reload();
             }
 
-            if (Constants.INTENT_FAN_STOP.equals(action)) {
+            if (Constants.INTENT_FAN_STOP.equals(action)
+                    || SharedConstants.Intent.REMOTE_STOP.equals(action)) {
                 Log.d(TAG, "STOP intent caught!");
                 stopAll();
                 stopSelf();

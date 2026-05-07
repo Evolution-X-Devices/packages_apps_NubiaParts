@@ -19,6 +19,7 @@ import android.os.Vibrator;
 import android.os.VibratorManager;
 import android.util.Log;
 
+import org.lineageos.device.NubiaParts.SharedConstants;
 import org.lineageos.device.NubiaParts.gameswitch.actions.*;
 import org.lineageos.device.NubiaParts.gameswitch.R;
 
@@ -251,7 +252,14 @@ public class KeyHandler extends Service {
                 init();
             }
 
-            if (Constants.Intent.KEY_MONITOR_STOP.equals(action)) {
+            if (SharedConstants.Intent.REMOTE_START.equals(action)) {
+                Log.d(TAG, "Starting key monitor (remote intent)");
+                mPrefs.edit().putBoolean(Constants.SLIDER_ENABLE_KEY, true).apply();
+                init();
+            }
+
+            if (Constants.Intent.KEY_MONITOR_STOP.equals(action)
+                    || SharedConstants.Intent.REMOTE_STOP.equals(action)) {
                 Log.d(TAG, "STOP intent caught!");
                 running = false;
                 stopSelf();
@@ -267,6 +275,8 @@ public class KeyHandler extends Service {
     @Override
     public void onDestroy() {
         stopMonitoring();
+        unregisterScreenReceiver(this);
+        mPrefs.edit().putBoolean(Constants.SLIDER_ENABLE_KEY, false).apply();
         super.onDestroy();
     }
 }

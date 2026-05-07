@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 
 <resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
-    
-    <string name="app_title">NubiaGameKeys</string>
+
     <string name="settings_name">Shoulder Buttons</string>
+    <string name="app_title">@string/settings_name</string>
 
     <string name="tile_state_disabled_subtitle">Off</string>
     <string name="tile_state_enabled_subtitle">On</string>

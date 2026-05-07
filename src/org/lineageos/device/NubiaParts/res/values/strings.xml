@@ -1,0 +1,16 @@
+<resources>
+
+    <string name="game_switch_title">Sliding switch</string>
+    <string name="game_keys_title">Shoulder Buttons</string>
+    <string name="fan_control_title">Fan Control</string>
+
+    <string name="nubia_parts_power_category_title">Power</string>
+    <string name="nubia_parts_fan_category_title">Fan</string>
+    <string name="nubia_parts_buttons_category_title">Buttons &amp; Keys</string>
+
+    <string name="bypass_charging_title">Bypass Charging</string>
+
+    <string name="nubia_parts_title">NubiaParts</string>
+    <string name="nubia_parts_summary">Extra settings for nubia devices</string>
+
+</resources>

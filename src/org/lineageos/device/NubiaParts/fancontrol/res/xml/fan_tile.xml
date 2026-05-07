@@ -1,4 +1,4 @@
 <tile xmlns:android="http://schemas.android.com/apk/res/android"
-    android:icon="@drawable/ic_tile_icon"
+    android:icon="@drawable/ic_fan"
     android:label="Fan Settings"
     android:settingsActivity="org.lineageos.device.NubiaParts.fancontrol.FanSettingsActivity" />

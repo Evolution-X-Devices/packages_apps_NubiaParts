@@ -32,7 +32,7 @@ public class NotificationHandler {
 
         Intent tapIntent = new Intent(context, ChargingController.class);
         tapIntent.setAction(Constants.Intent.NOTIFICATION_TAPPED);
-        PendingIntent tapPendingIntent = PendingIntent.getBroadcast(
+        PendingIntent tapPendingIntent = PendingIntent.getService(
                 context,
                 0,
                 tapIntent,
