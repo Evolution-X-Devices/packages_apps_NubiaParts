@@ -28,7 +28,6 @@ import java.io.IOException;
 
 public class KeyHandler extends Service {
     
-
     private static FlashlightAction mFlashlightAction;
     private static OrientationLockAction mOrientationLockAction;
     private static RingerAction mRingerAction;
@@ -38,12 +37,12 @@ public class KeyHandler extends Service {
 
     private static SwitchControllerBase mSwitchController;
 
-    private static int usage = 0;
+    private int usage = 0;
     private static boolean running = false;
 
-    private static Runnable pollRunnable;
+    private Runnable pollRunnable;
     private static Handler mainHandler;
-    private static int currentState = -1;
+    private int currentState = -1;
 
     private static String SYSFS_PATH;
 
@@ -54,7 +53,6 @@ public class KeyHandler extends Service {
     private static SharedPreferences mPrefs;
     private static IPowerManager ipm;
     private static Vibrator mVibrator;
-    private static Context mContext;
 
     private static final String TAG = KeyHandler.class.getSimpleName();
 
@@ -70,20 +68,19 @@ public class KeyHandler extends Service {
     @Override
     public void onCreate() {
         super.onCreate();
-        mContext = getApplicationContext();
-        mFlashlightAction = new FlashlightAction(mContext);
-        mRingerAction = new RingerAction(mContext);
-        mAppLauncher = new AppLauncher(mContext);
-        mOrientationLockAction = new OrientationLockAction(mContext);
-        mDNDModesAction = new DNDModesAction(mContext);
+        mFlashlightAction = new FlashlightAction(this);
+        mRingerAction = new RingerAction(this);
+        mAppLauncher = new AppLauncher(this);
+        mOrientationLockAction = new OrientationLockAction(this);
+        mDNDModesAction = new DNDModesAction(this);
 
-        VibratorManager vm = (VibratorManager) mContext.getSystemService(Context.VIBRATOR_MANAGER_SERVICE);
+        VibratorManager vm = (VibratorManager) getSystemService(Context.VIBRATOR_MANAGER_SERVICE);
         mVibrator = vm.getDefaultVibrator();
 
         IBinder b = ServiceManager.getService(Context.POWER_SERVICE);
         ipm = IPowerManager.Stub.asInterface(b);
 
-        mPrefs = mContext.getApplicationContext().getSharedPreferences(
+        mPrefs = getApplicationContext().getSharedPreferences(
                 Constants.PREF_KEY, Context.MODE_PRIVATE);
 
         SYSFS_PATH = getApplicationContext().getResources().getString(R.string.switch_sysfs_path);
@@ -105,7 +102,7 @@ public class KeyHandler extends Service {
         return -1;
     }
 
-    private static void startMonitoring() {
+    private void startMonitoring() {
         currentState = readState();
         Log.d(TAG, "Initial game switch state: " + currentState);
 
@@ -128,7 +125,7 @@ public class KeyHandler extends Service {
         Log.d(TAG, "Started polling game switch");
     }
 
-    private static void stopMonitoring() {
+    private void stopMonitoring() {
         if (pollRunnable != null) {
             running = false;
             mainHandler.removeCallbacks(pollRunnable);
@@ -142,15 +139,15 @@ public class KeyHandler extends Service {
         }
     }
 
-    private static void processAction(int state) {
+    private void processAction(int state) {
         if (usage != 0) {
-            if (shouldWake) wakeScreen(mContext);
+            if (shouldWake) wakeScreen();
             mSwitchController.processAction();
             if (vibrationEnabled) doHapticFeedback();
         }
     }
 
-    private static void init() {
+    private void init() {
 
         if (mSwitchController != null) {
             mSwitchController.reset();
@@ -181,7 +178,6 @@ public class KeyHandler extends Service {
             case DNDModesAction.ID:
                 mSwitchController = mDNDModesAction;
                 break;
-
         }
 
         if (mSwitchController != mAppLauncher) {
@@ -189,16 +185,16 @@ public class KeyHandler extends Service {
         }
 
         if (!screenOffEnabled) {
-            registerScreenReceiver(mContext);
+            registerScreenReceiver(this);
         } else {
-            unregisterScreenReceiver(mContext);
+            unregisterScreenReceiver(this);
         }
 
         vibrationEnabled = mPrefs.getBoolean(Constants.VIBRATION_KEY, true);
         startMonitoring();
     }
 
-    private static final BroadcastReceiver screenReceiver = new BroadcastReceiver() {
+    private final BroadcastReceiver screenReceiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
             String action = intent.getAction();
@@ -213,7 +209,7 @@ public class KeyHandler extends Service {
         }
     };
 
-    private static void registerScreenReceiver(Context context) {
+    private void registerScreenReceiver(Context context) {
         IntentFilter filter = new IntentFilter();
         filter.addAction(Intent.ACTION_SCREEN_ON);
         filter.addAction(Intent.ACTION_SCREEN_OFF);
@@ -221,7 +217,7 @@ public class KeyHandler extends Service {
         context.registerReceiver(screenReceiver, filter);
     }
 
-    private static void unregisterScreenReceiver(Context context) {
+    private void unregisterScreenReceiver(Context context) {
         try {
             context.unregisterReceiver(screenReceiver);
         } catch (Exception ignored) {
@@ -229,7 +225,7 @@ public class KeyHandler extends Service {
         }
     }
 
-    private static void wakeScreen(Context context) {
+    private void wakeScreen() {
         try {
             if (ipm.isInteractive()) {
                 return;
@@ -237,8 +233,8 @@ public class KeyHandler extends Service {
             ipm.wakeUp(
                     SystemClock.uptimeMillis(),
                     PowerManager.WAKE_REASON_APPLICATION,
-                    mContext.getApplicationInfo().name,
-                    mContext.getPackageName()
+                    getApplicationInfo().name,
+                    getPackageName()
             );
         } catch (RemoteException ignored) {
 
