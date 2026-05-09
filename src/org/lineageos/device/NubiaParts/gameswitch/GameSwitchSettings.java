@@ -11,6 +11,9 @@ import android.os.Bundle;
 import android.os.UserHandle;
 import android.util.Log;
 import android.util.Pair;
+import android.view.LayoutInflater;
+import android.view.View;
+
 import androidx.preference.ListPreference;
 import androidx.preference.PreferenceCategory;
 import androidx.preference.PreferenceGroup;
@@ -20,7 +23,6 @@ import androidx.preference.Preference;
 import androidx.preference.SwitchPreferenceCompat;
 import com.android.settingslib.widget.MainSwitchPreference;
 import com.android.settingslib.widget.SettingsBasePreferenceFragment;
-import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 
@@ -230,38 +232,14 @@ public class GameSwitchSettings extends SettingsBasePreferenceFragment
         SharedPreferences prefs = context.getSharedPreferences(
                 Constants.PREF_KEY, Context.MODE_PRIVATE);
 
-        // Store label + package name pairs
-        List<Pair<String, String>> labelPackagePairs = new ArrayList<>();
+        AppListDialog dialog = new AppListDialog();
 
-        for (ApplicationInfo app : apps) {
-            if (pm.getLaunchIntentForPackage(app.packageName) != null) {
-                String label = pm.getApplicationLabel(app).toString();
-                labelPackagePairs.add(new Pair<>(label, app.packageName));
-            }
-        }
+        dialog.setOnAppSelectedListener(app -> {
+            String packageName = app.activityInfo.packageName;
+            prefs.edit().putString(Constants.KEY_LAUNCH_APP_NAME, packageName).apply();
+            setAppLaunchLabel(prefs);
+        });
+        dialog.show(getChildFragmentManager(), "app_list");
 
-        labelPackagePairs.sort((o1, o2) -> o1.first.compareToIgnoreCase(o2.first));
-
-        List<String> labels = new ArrayList<>();
-        List<String> packageNames = new ArrayList<>();
-
-        for (Pair<String, String> pair : labelPackagePairs) {
-            String displayLabel = pair.first + "\n" + "(" + pair.second + ")";
-            labels.add(displayLabel);
-            packageNames.add(pair.second);
-        }
-
-        new AlertDialog.Builder(context)
-                .setTitle(R.string.app_launch_dialog_title)
-                .setItems(labels.toArray(new String[0]), (dialog, which) -> {
-                    String selectedPackage = packageNames.get(which);
-                    if (!selectedPackage.isEmpty()) {
-                        SharedPreferences.Editor editor = prefs.edit();
-                        editor.putString(Constants.KEY_LAUNCH_APP_NAME, selectedPackage);
-                        editor.apply();
-                    }
-
-                })
-                .show();
     }
 }
